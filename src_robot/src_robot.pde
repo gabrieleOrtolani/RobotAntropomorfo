@@ -6,6 +6,7 @@ int gearCol;
 int linkCol;
 //rotation angle Y-axis
 float alpha  = 0;
+float beta = 0;
 float[] q = new float[6]; //DEBUG
 
 // coordinate floor
@@ -53,8 +54,11 @@ float c1h2 = a1l;
 float c1r3 = 3*c1r2/4;
 float c1h3 = c1h2;
 
-float g2s = c1r3; //diametro
+float g2s = 0.8*c1r3; //diametro
 float g2h = c1h2 + c1r3/2; //altezza
+
+float g21s = g2s;            //diametro
+float g21h = (g2h-c1h3)/2;   //altezza
 
 
 
@@ -132,11 +136,15 @@ void draw() {
     }
 
     /*DEBUG*/
+    if(key == '0') {
+       beta -= rad(1); 
+    }
+    
     if (key == '1') {
       q[1] += rad(30);
     }
     if (key == '2') {
-      q[2] += rad(30);
+      q[2] -= rad(30);
     }
     if (key == '3') {
       q[3] += rad(30);
@@ -153,6 +161,7 @@ void draw() {
     // q=reset
     if (key == 'q') {
       alpha = 0;
+      beta = 0;
 
       xBase = width/2;
       zBase = -width/2;
@@ -179,6 +188,7 @@ void draw() {
   fill(#858B77);
   translate(xBase, yBase, zBase);
   rotateZ(alpha);
+  rotateX(beta);
   box(xFloor, yFloor, zFloor);
 
   /* BASE(link0) */
@@ -213,23 +223,36 @@ void draw() {
   translate(0, 0, a1h/2+c1h/2);
   box(a1l, a1l, a1h);
   drawAxis(500);
+  
 
-  translate(-a1l/2, 0, 0);
+  translate(a1l/2, a1l/2+g21h/2, 0);
   rotateY(rad(90));
   rotateX(rad(-90));
+  
+  rotateZ(rad(-q[2])-rad(10));
+  drawGear(g21s,g21h,20);  // ingranaggio sul box grosso
+  rotateZ(rad(+q[2])+rad(10));
+  
+  translate(0,a1l,-a1l/2-g21h/2);
   drawCylinder(90, c1r2, c1r2, c1h2); // cilidro davanti
   translate(0, -a1l, 0);
-  box(g2h-c1h3, c1h3, c1h3);
-  translate(0, -c1r3, +g2h-c1h3);
+  box(2*c1r3, 2*c1r3, c1h3);
+  translate(0, -c1r3, 0);
   drawCylinder(90, c1r3, c1r3, c1h3); // cilidro davanti
+  
+  
   
   rotateZ(rad(q[2])); // rotazione 2 (in realtà rotateY)
   
-  drawGear(g2s,g2h,10);
+  drawGear(g2s,g2h,20);
+  
+  
+
+  
   rotateY(rad(-90));
   rotateX(rad(90));
   
-  
+ 
 }
 
 
