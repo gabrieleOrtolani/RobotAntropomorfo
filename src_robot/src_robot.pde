@@ -1,5 +1,6 @@
 //float eyeY;
 
+// general variables for stroke 
 int strokeVar;
 int strokeCol;
 int gearCol;
@@ -15,48 +16,63 @@ float yFloor = 2200;
 float zFloor = 10;
 
 // coordinate del sistema di riferimento della finestra
+// x,y,z window
 float xBase;
 float yBase;
 float zBase;
 
-// base
-// a = rettangoloBase, b = rettangolo, c = cilindro
+// L0 (base)
+
+// a = rettangoloBase
 float a0x = 420;
 float a0y = 320;
 float a0z = 35;
 
+//b = rettangolo
 float b0x = a0x-a0y;
 float b0y = a0y;
 float b0z = 215;
 
-
+// c = cilindro
 float chOffset0 = 20;
 float crOffset0 = 20;
 float c0r = a0y/2-crOffset0;  //raggio cilindro
 float c0h = b0z+chOffset0;  // altezza cilindro
 
 
-// gear 1
+// G1
+
+//gear
 float g1s = c0r; //diametro
 float g1h = 30; //altezza
 
-// link1
-
+// cilindro sopra il G1
 float c1r = c0r+crOffset0;  //raggio cilindro
 float c1h = g1h/2;  // altezza cilindro
 
+
+// L1
+
+// box
 float a1l = (2*c1r)/sqrt(2);
 float a1h = 3*a1l/4;
 
+//cilindro posteriore
 float c1r2 = a1h/2;
 float c1h2 = a1l;
 
+//cilindro anteriore
 float c1r3 = 3*c1r2/4;
 float c1h3 = c1h2;
 
+// box anteriore servito a coprire il cilindro anteriore
+// lato = 2*c1r3
+
+//ingranaggio 1 esterno "attuato da ingranaggio 2"
 float g2s = 0.8*c1r3; //diametro
 float g2h = c1h2 + c1r3/2; //altezza
 
+//ingranaggio 2 interno
 float g21s = g2s;            //diametro
 float g21h = (g2h-c1h3)/2;   //altezza
 
@@ -71,11 +87,11 @@ float g21h = (g2h-c1h3)/2;   //altezza
 
 
 
-
+/*  SETUP  */
 
 void setup() {
+  // create window
   fullScreen(P3D);
-
 
   strokeVar=2;
   strokeCol= #FFFFFF;
@@ -83,10 +99,12 @@ void setup() {
   stroke(strokeCol);
   strokeWeight(strokeVar);
 
+  // x,y,z base 
   xBase = width/2;
-  zBase = -width/2;
+  zBase = -width/2; //per centrare
   yBase = 0;
 
+ 
   gearCol = #AFAFAF;
   linkCol = #EA9A18;
 
@@ -107,16 +125,20 @@ void setup() {
 
 
 
+/*  DRAW  */
 
 void draw() {
+  
   background(40);
-  lights();
+  lights();  
+  
   // camera((width/2.0), height/2 - eyeY, (height/2.0) / tan(PI*60.0 / 360.0), width/2.0, height/2.0, 0, 0, 1, 0);
   if (mousePressed) {
     xBase = mouseX;
     zBase = -mouseY;
   }
 
+  /* ENV CONTROL */
   if (keyPressed) {
     if (keyCode == RIGHT)
     {
@@ -139,7 +161,9 @@ void draw() {
     if(key == '0') {
        beta -= rad(1); 
     }
+    /* END ENV CONTROL*/
     
+    /* ANGLE CONTROL */
     if (key == '1') {
       q[1] += rad(30);
     }
@@ -172,13 +196,17 @@ void draw() {
       }
     }
   }
-  //printing
+  /* END ANGLE CONTROL */
+  
+  
+  /* PRINTING */
   textSize(20);
   /*
   text
-   text
-   text
-   */
+  text
+  text
+  */
+  /* END PRINTING */
 
 
   /* SETTING ENV */
@@ -191,26 +219,30 @@ void draw() {
   rotateX(beta);
   box(xFloor, yFloor, zFloor);
 
-  /* BASE(link0) */
+  /*  L0 (base) */
+  
+  // a0
   fill(linkCol);
   translate(0, 0, zFloor/2+a0z/2);
-  box(a0x, a0y, a0z);  // First box
-
+  box(a0x, a0y, a0z);  
+  
+  // b0
   translate((-a0x/2)+(b0x/2), 0, a0z/2+b0z/2);
-  box(b0x, b0y, b0z);  // Second box
-
+  box(b0x, b0y, b0z);  
+  
+  // c0
   translate(b0x/2+c0r+crOffset0, 0, chOffset0/2);
   //stroke(#EA9A18);
-  drawCylinder(90, c0r, c0r, c0h);  // Cylinder
+  drawCylinder(90, c0r, c0r, c0h);  
 
-  /* DRAW AXYS */
+  /* DRAW AXYS L0*/
   pushMatrix();
   translate(0, 0, -c0h/2-a0z);       // mi sposto per disegnare gli assi
   drawAxis(1000);
   popMatrix();
 
   /* Gear1 */
-  //fill(#16B969);
+  fill(#16B969);
   translate(0, 0, c0h/2+g1h/2);
 
   rotateZ(rad(q[1])); // rotazione 1
