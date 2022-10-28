@@ -5,17 +5,18 @@ int strokeVar;
 int strokeCol;
 int gearCol;
 int linkCol;
+
 //rotation angle Y-axis
 float alpha  = 0;
 float beta = 0;
 float[] q = new float[6]; //DEBUG
 
-// coordinate floor
+// floor coordinates
 float xFloor = 3200;
 float yFloor = 2200;
 float zFloor = 10;
 
-// coordinate del sistema di riferimento della finestra
+
 // x,y,z window
 float xBase;
 float yBase;
