@@ -79,6 +79,35 @@ float g21h = (g2h-c1h3)/2;   //altezza
 
 
 
+// L2
+
+//cilindri estremi di L2
+float c2r1 = c1r2*0.9;
+float c2h = g1h;
+
+//braccio 2
+float a2x  = 700;
+float a2y = 2*c2r1;
+float a2z = 30;
+
+//GEAR3
+//cilindro di giunto
+
+float c2r2 = c1r3;
+float c2h2 = c1h3/2 + a2z;
+
+
+//ingranaggio
+
+float g3h = c2h2+(g2h-c1h3);
+float g3s = g2s;
+
+//L3
+
+float a3x  = 700;
+float a3y = 2*c2r2;
+float a3z = 30;
+ 
 
 
 
@@ -103,7 +132,7 @@ void setup() {
   // x,y,z base 
   xBase = width/2;
   zBase = -width/2; //per centrare
-  yBase = 0;
+  yBase = -1000;
 
  
   gearCol = #AFAFAF;
@@ -277,10 +306,40 @@ void draw() {
   
   rotateZ(rad(q[2])); // rotazione 2 (in realtà rotateY)
   
-  drawGear(g2s,g2h,20);
+  drawGear(g2s,g2h,20); // attuato dal gear g12s
+  translate(0,0,-g2h/2-15);
+  drawCylinder(90, c2r1, c2r1, c2h);
   
   
-
+  //braccio L2
+  translate(-a2x/2,0,0);
+  box(a2x,a2y,a2z);
+  
+  //Cilindro finale
+  translate(-a2x/2,0,0);
+  drawCylinder(90, c2r1, c2r1, c2h);
+  
+  
+  
+  //Cilindro giunto per gear3
+  translate(0,0,(g2h-c1h3)+c2h2/2);
+  drawCylinder(90, c2r2, c2r2, c2h2);
+  
+  
+ //Gear3 
+  translate(0,0,a2z/2-(g2h-c1h3)/2);
+  drawGear(g3s,g3h,20);
+  
+  
+  rotateZ(rad(q[3]));
+  
+  //braccio3
+  translate(-a3x/2,0,g3h/2-a3z);
+  box(a3x,a3y,a3z);
+  
+  
+  
+  
   
   rotateY(rad(-90));
   rotateX(rad(90));
