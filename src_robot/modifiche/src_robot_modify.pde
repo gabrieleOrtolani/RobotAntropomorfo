@@ -9,6 +9,7 @@ int linkCol;
 //rotation angle Y-axis
 float alpha  = 0;
 float beta = 0;
+int segno = -1;
 float[] q = new float[6]; //DEBUG
 
 // floor coordinates
@@ -105,6 +106,14 @@ float a3z = 20;
 //cilindri estremi di L2
 float c3r = a3y/2;
 float c3h = a3z;
+//gear attuante su gear3
+float g3h2 = g1h;
+float g3s2 = g2s*2.1;
+//cilindro motore
+float c3r2 =  g3s2*0.5;
+float c3h2 = 2*(g3h/2-2*GAP+a3z/2);
+
+
  
 
 
@@ -156,14 +165,14 @@ void setup() {
 /*  DRAW  */
 
 void draw() {
-  
+  noStroke();
   background(40);
   lights();  
   
   // camera((width/2.0), height/2 - eyeY, (height/2.0) / tan(PI*60.0 / 360.0), width/2.0, height/2.0, 0, 0, 1, 0);
   if (mousePressed) {
     xBase = mouseX;
-    zBase = -mouseY;
+    zBase = -mouseY-1000;
   }
 
   /* ENV CONTROL */
@@ -193,22 +202,25 @@ void draw() {
     
     /* ANGLE CONTROL */
     if (key == '1') {
-      q[1] += rad(30);
+      q[1] += segno*rad(30);
     }
     if (key == '2') {
-      q[2] -= rad(30);
+      q[2] -= segno*rad(30);
     }
     if (key == '3') {
-      q[3] += rad(30);
+      q[3] += segno*rad(30);
     }
     if (key == '4') {
-      q[4] += rad(30);
+      q[4] += segno*rad(30);
     }
     if (key == '5') {
-      q[5] += rad(30);
+      q[5] += segno*rad(30);
     }
     if (key == '6') {
-      q[6] += rad(30);
+      q[6] += segno* rad(30);
+    }
+    if (key == 's') {
+      segno = -1*segno;
     }
     // q=reset
     if (key == 'q') {
@@ -325,7 +337,7 @@ void draw() {
   
 /* Gear2 */
             drawGear(g2s,g2h,20); // attuato dal gear g12s
-            translate(0,0,-g2h/2-15);
+            translate(0,0,-g2h/2-a2z/2);
             drawCylinder(90, c2r1, c2r1, c2h);
   
   
@@ -340,16 +352,8 @@ void draw() {
             //Cilindro finale
             translate(-a2x/2,0,0);
             drawCylinder(90, c2r1, c2r1, c2h);
-            
-            
-            
-            //Cilindro giunto per gear3
-            //translate(0,0,(g2h-c1h3)+c2h2/2);
-            //drawCylinder(90, c2r2, c2r2, c2h2);
-            
-
   
- /* Gear3 */
+/* Gear3 */
  
             translate(0,0,g3h/2 + c2h/2);
             drawGear(g3s,g3h,20);
@@ -363,25 +367,60 @@ void draw() {
             drawAxis(500);
             popMatrix();
             
-  rotateZ(rad(q[3]));
+rotateZ(rad(q[3]));
   
   
 /*  L3 (braccio2) */
   
-  translate(0 ,0,g3h/2-GAP+a3z/2);
+            translate(0 ,0,g3h/2-GAP+a3z/2);
+            drawCylinder(90, c3r, c3r, c3h);
+            
+            translate(0,0,2*(-g3h/2+a3z/2));
+            drawCylinder(90, c3r, c3r, c3h);
+            
+            translate(-a3x/2 ,0,0);
+            box(a3x,a3y,a3z);
+            
+            translate(0,0,-2*(-g3h/2+a3z/2));
+            box(a3x,a3y,a3z);
+            
+            translate(-a3x/2 ,0,0);
+            drawCylinder(90, c3r, c3r, c3h);
+            
+            
+            translate(0,0,2*(-g3h/2+a3z/2));
+            drawCylinder(90, c3r, c3r, c3h);
+            
+            //draw gear motore1
+            pushMatrix();
   
-  drawCylinder(90, c3r, c3r, c3h);
-  //translate(-a3x/2 ,0,0);
-    translate(0 ,0,g3h/2-GAP+a3z/2);
+            translate(34*a3x/42,0,-(-g3h/2+a3z/2)); //lasciare cosi 34/42
+            drawCylinder(90, c3r2, c3r2, c3h2);
+            
+            rotateZ(rad(q[3]*0.7));
+            drawGear(g3s2,g3h2,24);
+            rotateZ(-rad(q[3]*0.7));
+            
+            popMatrix();
+            //end gear motore1
+            
+            
+            
+            
+            /*draw gear motore2*/
+            
+            translate(-c3h2/2,0,-(-g3h/2+a3z/2));
+            rotateY(PI/2);
+  
+            
+            drawCylinder(90, c3r2, c3r2, c3h2);
+            
+            //drawGear(g3s2,g3h2,20);
+            
+            
+            //end gear motore2/**/
+            
 
-  drawCylinder(90, c3r, c3r, c3h);
-  
-  
-
-  box(a3x,a3y,a3z);
-  translate(0,0,2*(-g3h/2+a3z/2));
-  box(a3x,a3y,a3z);
-  
   
              /* DRAW AXYS L1*/
             pushMatrix();
@@ -464,6 +503,7 @@ void drawCylinder( int sides, float r1, float r2, float h)
 {
   float angle = 360 / sides;
   float halfHeight = h / 2;
+  noStroke();
   // top
   beginShape();
   for (int i = 0; i < sides; i++) {
@@ -492,5 +532,6 @@ void drawCylinder( int sides, float r1, float r2, float h)
     vertex( x2, y2, halfHeight);
   }
   stroke(strokeCol);
+  noStroke();
   endShape(CLOSE);
 }
