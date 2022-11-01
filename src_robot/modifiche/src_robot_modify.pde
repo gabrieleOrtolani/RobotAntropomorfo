@@ -54,42 +54,37 @@ float c1h = g1h/2;  // altezza cilindro
 
 
 // L1
-
 // box
 float a1l = (2*c1r)/sqrt(2);
 float a1h = 3*a1l/4;
-
 //cilindro posteriore
 float c1r2 = a1h/2;
 float c1h2 = a1l;
-
 //cilindro anteriore
 float c1r3 = 3*c1r2/4;
 float c1h3 = c1h2;
-
 // box anteriore servito a coprire il cilindro anteriore
 // lato = 2*c1r3
-
 //ingranaggio 1 esterno "attuato da ingranaggio 2"
 float g2s = 0.8*c1r3; //diametro
 float g2h = c1h2 + c1r3/2; //altezza
-
 //ingranaggio 2 interno
 float g21s = g2s;            //diametro
 float g21h = (g2h-c1h3)/2;   //altezza
 
-float GAP = (g2h-c1h3)/2;
 
+float GAP = (g2h-c1h3)/2;
 
 
 // L2
 //braccio 2
-float a2x  = 700;
+float a2x  = 800;
 float a2y = 2*0.9*c1r2;
 float a2z = 40;
 //cilindri estremi di L2
 float c2r1 = a2y/2;
 float c2h = a2z;
+
 
 //GEAR3
 //cilindro di giunto
@@ -99,21 +94,38 @@ float c2h2 = c1h3/2 + a2z;
 float g3h = c1h3-(g2h-c1h3)/2;
 float g3s = g2s;
 
+
 //L3
 float a3y = 2*c2r2;
-float a3x  = a2x - c1r3 - a3y/2;
+float a3x  = 2*a2x/3 - c1r3- a3y/2;
 float a3z = 20;
 //cilindri estremi di L2
 float c3r = a3y/2;
 float c3h = a3z;
 //gear attuante su gear3
-float g3h2 = g1h;
+float g3h2 = g1h*2;
 float g3s2 = g2s*2.1;
-//cilindro motore
-float c3r2 =  g3s2*0.5;
+//cilindro motore 1
+float c3r2 = g3s2*0.5;
 float c3h2 = 2*(g3h/2-2*GAP+a3z/2);
+//cilindro motore 2
+float c3r3 = c3h2/2+a3z/2;
+float c3h3 = c3r;
+//box per contornare
+float a3y2 = a3y;
+float a3x2  = 2*(g3h/2-2*GAP+a3z/2)+2;
+float a3z2 = c3h3;
+//gear attuante su gear4
+float g3h3 = 2*c3h3+2*GAP;
+float g3s3 = 0.8*c3r3;
 
-
+//L4
+//aggancio per rotazione
+float c4r = c3r3*0.9;
+float c4h = c3h3*0.8;
+//braccio 
+float c4r2 = c4r;
+float c4h2= a3x/3;
  
 
 
@@ -165,7 +177,7 @@ void setup() {
 /*  DRAW  */
 
 void draw() {
-  noStroke();
+  //noStroke();
   background(40);
   lights();  
   
@@ -393,8 +405,8 @@ rotateZ(rad(q[3]));
             
             //draw gear motore1
             pushMatrix();
-  
-            translate(34*a3x/42,0,-(-g3h/2+a3z/2)); //lasciare cosi 34/42
+
+            translate(a3x-sqrt(2)*g3s/2-sqrt(2)*g3s2/2,0,-(-g3h/2+a3z/2)); //lasciare cosi 34/42
             drawCylinder(90, c3r2, c3r2, c3h2);
             
             rotateZ(rad(q[3]*0.7));
@@ -408,27 +420,40 @@ rotateZ(rad(q[3]));
             
             
             /*draw gear motore2*/
-            
-            translate(-c3h2/2,0,-(-g3h/2+a3z/2));
+            translate(c3r/2,0,-(-g3h/2+a3z/2));
             rotateY(PI/2);
-  
             
-            drawCylinder(90, c3r2, c3r2, c3h2);
+            drawCylinder(90, c3r3, c3r3, c3h3);
+            box (a3x2,a3y2,a3z2);
             
-            //drawGear(g3s2,g3h2,20);
+            /*end gear motore2*/
             
             
-            //end gear motore2/**/
+/* Gear4 */
+            translate(0,0,-g3h3/2+3*GAP); 
             
-
-  
-             /* DRAW AXYS L1*/
+      /* DRAW AXYS L1*/
             pushMatrix();
-            rotateY(PI);
+            rotateY(PI/2);
             rotateZ(-PI/2);
             drawAxis(500);
             popMatrix();
  
+  
+            rotateZ(rad(q[4]));
+            drawGear(g3s3,g3h3,20);
+
+/*  L4 (braccio3) */ 
+
+            translate(0,0,-c3r); 
+            drawCylinder(90, c4r,c4r, c4h);
+            translate(0,0,-c4h2/2); 
+            drawCylinder(8,c4r2-c4r2/3, c4r2, c4h2);
+            
+            
+
+  
+
 }
 
 
@@ -503,6 +528,43 @@ void drawCylinder( int sides, float r1, float r2, float h)
 {
   float angle = 360 / sides;
   float halfHeight = h / 2;
+  //noStroke();
+  // top
+  beginShape();
+  for (int i = 0; i < sides; i++) {
+    float x = cos( radians( i * angle ) ) * r1;
+    float y = sin( radians( i * angle ) ) * r1;
+    vertex( x, y, -halfHeight);
+  }
+  endShape(CLOSE);
+  // bottom
+  beginShape();
+  for (int i = 0; i < sides; i++) {
+    float x = cos( radians( i * angle ) ) * r2;
+    float y = sin( radians( i * angle ) ) * r2;
+    vertex( x, y, halfHeight);
+  }
+  endShape(CLOSE);
+  // draw body
+  noStroke();
+  beginShape(TRIANGLE_STRIP);
+  for (int i = 0; i < sides + 1; i++) {
+    float x1 = cos( radians( i * angle ) ) * r1;
+    float y1 = sin( radians( i * angle ) ) * r1;
+    float x2 = cos( radians( i * angle ) ) * r2;
+    float y2 = sin( radians( i * angle ) ) * r2;
+    vertex( x1, y1, -halfHeight);
+    vertex( x2, y2, halfHeight);
+  }
+  stroke(strokeCol);
+  //noStroke();
+  endShape(CLOSE);
+}
+/*
+void drawCylinder( int sides, float r1, float r2, float h, int stroke)
+{
+  float angle = 360 / sides;
+  float halfHeight = h / 2;
   noStroke();
   // top
   beginShape();
@@ -535,3 +597,4 @@ void drawCylinder( int sides, float r1, float r2, float h)
   noStroke();
   endShape(CLOSE);
 }
+*/
