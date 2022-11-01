@@ -1,6 +1,11 @@
 //float eyeY;
 
-// general variables for stroke 
+import com.jogamp.opengl.GLProfile;
+{
+  GLProfile.initSingleton();
+}
+
+// general variables for stroke
 int strokeVar;
 int strokeCol;
 int gearCol;
@@ -97,7 +102,7 @@ float g3s = g2s;
 
 //L3
 float a3y = 2*c2r2;
-float a3x  = 2*a2x/3 - c1r3- a3y/2;
+float a3x  = a2x/2 - c1r3-a3y ;
 float a3z = 20;
 //cilindri estremi di L2
 float c3r = a3y/2;
@@ -116,17 +121,25 @@ float a3y2 = a3y;
 float a3x2  = 2*(g3h/2-2*GAP+a3z/2)+2;
 float a3z2 = c3h3;
 //gear attuante su gear4
-float g3h3 = 2*c3h3+2*GAP;
+float g3h3 = 2*c3h3;
 float g3s3 = 0.8*c3r3;
 
 //L4
 //aggancio per rotazione
-float c4r = c3r3*0.9;
-float c4h = c3h3*0.8;
-//braccio 
-float c4r2 = c4r;
-float c4h2= a3x/3;
- 
+float c4r = c3r3*0.7;
+float c4h = c3h3*0.7;
+
+float a4y = 0.6*a3y;
+float a4x  = 0.7*a3x ;
+float a4z = 20;
+
+//cilidri finali
+float c4r2 = a4y/2;
+float c4h2 = c3h;
+
+//L5
+
+
 
 
 
@@ -140,28 +153,34 @@ float c4h2= a3x/3;
 
 void setup() {
   // create window
-  fullScreen(P3D);
-
-  strokeVar=2;
-  strokeCol= #FFFFFF;
+  
+  //String os = osSetup();
+  
+  //fullScreen(P3D);
+  size(1500,1200,P3D);
+  strokeVar=1;
+  //strokeCol= #FFFFFF;
+  strokeCol= #6A4811;
 
   stroke(strokeCol);
   strokeWeight(strokeVar);
 
-  // x,y,z base 
+  // x,y,z base
   xBase = width/2;
   zBase = -width/2; //per centrare
   yBase = -1500;
 
- 
-  gearCol = #AFAFAF;
+
+  //gearCol = #AFAFAF;
   linkCol = #EA9A18;
+  gearCol= 150;
+  //linkCol = #FFED24;
 
   smooth();
 
   /* DEBUG ANGOLI INIZIALI */
   for (int i=0; i<6; i++) {
-    q[i] = 0;
+    q[i] = 60;
   }
 }
 
@@ -179,8 +198,8 @@ void setup() {
 void draw() {
   //noStroke();
   background(40);
-  lights();  
-  
+  lights();
+
   // camera((width/2.0), height/2 - eyeY, (height/2.0) / tan(PI*60.0 / 360.0), width/2.0, height/2.0, 0, 0, 1, 0);
   if (mousePressed) {
     xBase = mouseX;
@@ -207,11 +226,11 @@ void draw() {
     }
 
     /*DEBUG*/
-    if(key == '0') {
-       beta -= rad(1); 
+    if (key == '0') {
+      beta -= rad(1);
     }
     /* END ENV CONTROL*/
-    
+
     /* ANGLE CONTROL */
     if (key == '1') {
       q[1] += segno*rad(30);
@@ -249,15 +268,15 @@ void draw() {
     }
   }
   /* END ANGLE CONTROL */
-  
-  
+
+
   /* PRINTING */
   textSize(20);
   /*
   text
-  text
-  text
-  */
+   text
+   text
+   */
   /* END PRINTING */
 
 
@@ -265,194 +284,230 @@ void draw() {
   rotateX(rad(90));
 
   /* FLOOR */
-  
-            fill(#858B77);
-            translate(xBase, yBase, zBase);
-            rotateZ(alpha);
-            rotateX(beta);
-            box(xFloor, yFloor, zFloor);
+
+  fill(#858B77);
+  translate(xBase, yBase, zBase);
+  rotateZ(alpha);
+  rotateX(beta);
+  box(xFloor, yFloor, zFloor);
 
   /*  L0 (base) */
-  
-            // a0
-            fill(linkCol);
-            translate(0, 0, zFloor/2+a0z/2);
-            box(a0x, a0y, a0z);  
-            
-            // b0
-            translate((-a0x/2)+(b0x/2), 0, a0z/2+b0z/2);
-            box(b0x, b0y, b0z);  
-            
-            // c0
-            translate(b0x/2+c0r+crOffset0, 0, chOffset0/2);
-            //stroke(#EA9A18);
-            drawCylinder(90, c0r, c0r, c0h);  
-          
-        /* DRAW AXYS L0*/
-        
-        
-            pushMatrix();
-            translate(0, 0, -c0h/2-a0z);       // mi sposto per disegnare gli assi
-            drawAxis(1000);
-            popMatrix();
-            
-            
+
+  // a0
+  fill(linkCol);
+  translate(0, 0, zFloor/2+a0z/2);
+  box(a0x, a0y, a0z);
+
+  // b0
+  translate((-a0x/2)+(b0x/2), 0, a0z/2+b0z/2);
+  box(b0x, b0y, b0z);
+
+  // c0
+  translate(b0x/2+c0r+crOffset0, 0, chOffset0/2);
+  //stroke(#EA9A18);
+  drawCylinder(90, c0r, c0r, c0h);
+
+  /* DRAW AXYS L0*/
+
+
+  pushMatrix();
+  translate(0, 0, -c0h/2-a0z);       // mi sposto per disegnare gli assi
+  drawAxis(1000);
+  popMatrix();
+
+
 
   /* Gear1 */
-            fill(#16B969);
-            translate(0, 0, c0h/2+g1h/2);
-            
-  
+  fill(#16B969);
+  translate(0, 0, c0h/2+g1h/2);
+
+
 
 
   rotateZ(rad(q[1])); // rotazione 1
-  
-  
+
+
   /*  L1 (base ruotabile) */
-  
-            drawGear(g1s, g1h, 10);
-            
-            //base cilindrica
-            translate(0, 0, g1h/2+c1h/2);
-            drawCylinder(90, c1r, c1r, c1h);
-            //corpo link
-            translate(0, 0, a1h/2+c1h/2);
-            box(a1l, a1l, a1h);
-            
-  
 
-            translate(a1l/2, a1l/2+g21h/2, 0);
-            rotateY(rad(90));
-            rotateX(rad(-90));
-            
-            rotateZ(rad(-q[2])-rad(10));
-            drawGear(g21s,g21h,20);  // ingranaggio sul box grosso
-            rotateZ(rad(+q[2])+rad(10));
-            
-            translate(0,a1l,-a1l/2-g21h/2);
-            drawCylinder(90, c1r2, c1r2, c1h2); // cilidro davanti
-            translate(0, -a1l, 0);
-            box(2*c1r3, 2*c1r3, c1h3);
-            translate(0, -c1r3, 0);
-            drawCylinder(90, c1r3, c1r3, c1h3); // cilidro davanti
-            
-       /* DRAW AXYS L1*/
-        
-            pushMatrix();
-            rotateY(PI);
-            rotateZ(-PI/2);
-            drawAxis(500);
-            popMatrix();
-  
-  
+  drawGear(g1s, g1h, 10);
+
+  //base cilindrica
+  translate(0, 0, g1h/2+c1h/2);
+  drawCylinder(90, c1r, c1r, c1h);
+  //corpo link
+  translate(0, 0, a1h/2+c1h/2);
+  box(a1l, a1l, a1h);
+
+
+
+  translate(a1l/2, a1l/2+g21h/2, 0);
+  rotateY(rad(90));
+  rotateX(rad(-90));
+
+  rotateZ(rad(-q[2])-rad(10));
+  drawGear(g21s, g21h, 20);  // ingranaggio sul box grosso
+  rotateZ(rad(+q[2])+rad(10));
+
+  translate(0, a1l, -a1l/2-g21h/2);
+  drawCylinder(90, c1r2, c1r2, c1h2); // cilidro davanti
+  translate(0, -a1l, 0);
+  box(2*c1r3, 2*c1r3, c1h3);
+  translate(0, -c1r3, 0);
+  drawCylinder(90, c1r3, c1r3, c1h3); // cilidro davanti
+
+  /* DRAW AXYS L1*/
+
+  pushMatrix();
+  rotateY(PI);
+  rotateZ(-PI/2);
+  drawAxis(500);
+  popMatrix();
+
+
   rotateZ(rad(q[2])); // rotazione 2 (in realtà rotateY)
-  
-/* Gear2 */
-            drawGear(g2s,g2h,20); // attuato dal gear g12s
-            translate(0,0,-g2h/2-a2z/2);
-            drawCylinder(90, c2r1, c2r1, c2h);
-  
-  
-  
-  
-/*  L2 (braccio) */
-   
-            //braccio L2
-            translate(-a2x/2,0,0);
-            box(a2x,a2y,a2z);
-            
-            //Cilindro finale
-            translate(-a2x/2,0,0);
-            drawCylinder(90, c2r1, c2r1, c2h);
-  
-/* Gear3 */
- 
-            translate(0,0,g3h/2 + c2h/2);
-            drawGear(g3s,g3h,20);
-           
-           
-            translate(0,0,GAP);
-         /* DRAW AXYS L1*/
-            pushMatrix();
-            rotateY(PI);
-            rotateZ(-PI/2);
-            drawAxis(500);
-            popMatrix();
-            
-rotateZ(rad(q[3]));
-  
-  
-/*  L3 (braccio2) */
-  
-            translate(0 ,0,g3h/2-GAP+a3z/2);
-            drawCylinder(90, c3r, c3r, c3h);
-            
-            translate(0,0,2*(-g3h/2+a3z/2));
-            drawCylinder(90, c3r, c3r, c3h);
-            
-            translate(-a3x/2 ,0,0);
-            box(a3x,a3y,a3z);
-            
-            translate(0,0,-2*(-g3h/2+a3z/2));
-            box(a3x,a3y,a3z);
-            
-            translate(-a3x/2 ,0,0);
-            drawCylinder(90, c3r, c3r, c3h);
-            
-            
-            translate(0,0,2*(-g3h/2+a3z/2));
-            drawCylinder(90, c3r, c3r, c3h);
-            
-            //draw gear motore1
-            pushMatrix();
 
-            translate(a3x-sqrt(2)*g3s/2-sqrt(2)*g3s2/2,0,-(-g3h/2+a3z/2)); //lasciare cosi 34/42
-            drawCylinder(90, c3r2, c3r2, c3h2);
-            
-            rotateZ(rad(q[3]*0.7));
-            drawGear(g3s2,g3h2,24);
-            rotateZ(-rad(q[3]*0.7));
-            
-            popMatrix();
-            //end gear motore1
-            
-            
-            
-            
-            /*draw gear motore2*/
-            translate(c3r/2,0,-(-g3h/2+a3z/2));
-            rotateY(PI/2);
-            
-            drawCylinder(90, c3r3, c3r3, c3h3);
-            box (a3x2,a3y2,a3z2);
-            
-            /*end gear motore2*/
-            
-            
-/* Gear4 */
-            translate(0,0,-g3h3/2+3*GAP); 
-            
-      /* DRAW AXYS L1*/
-            pushMatrix();
-            rotateY(PI/2);
-            rotateZ(-PI/2);
-            drawAxis(500);
-            popMatrix();
- 
+  /* Gear2 */
+  drawGear(g2s, g2h, 20); // attuato dal gear g12s
+  translate(0, 0, -g2h/2-a2z/2);
+  drawCylinder(90, c2r1, c2r1, c2h);
+
+
+
+
+  /*  L2 (braccio) */
+
+  //braccio L2
+  translate(-a2x/2, 0, 0);
+  box(a2x, a2y, a2z);
+
+  //Cilindro finale
+  translate(-a2x/2, 0, 0);
+  drawCylinder(90, c2r1, c2r1, c2h);
+
+  /* Gear3 */
+
+  translate(0, 0, g3h/2 + c2h/2);
+  drawGear(g3s, g3h, 20);
+
+
+  translate(0, 0, GAP);
+  /* DRAW AXYS L1*/
+  pushMatrix();
+  rotateY(PI);
+  rotateZ(-PI/2);
+  drawAxis(500);
+  popMatrix();
+
+  rotateZ(rad(q[3]));
+
+
+  /*  L3 (braccio2) */
+
+  translate(0, 0, g3h/2-GAP+a3z/2);
+  drawCylinder(90, c3r, c3r, c3h);
+
+  translate(0, 0, 2*(-g3h/2+a3z/2));
+  drawCylinder(90, c3r, c3r, c3h);
+
+  translate(-a3x/2, 0, 0);
+  box(a3x, a3y, a3z);
+
+  translate(0, 0, -2*(-g3h/2+a3z/2));
+  box(a3x, a3y, a3z);
+
+  translate(-a3x/2, 0, 0);
+  drawCylinder(90, c3r, c3r, c3h);
+
+
+  translate(0, 0, 2*(-g3h/2+a3z/2));
+  drawCylinder(90, c3r, c3r, c3h);
+
+  //draw gear motore1
+  pushMatrix();
+
+  translate(a3x-sqrt(2)*g3s/2-sqrt(2)*g3s2/2, 0, -(-g3h/2+a3z/2)); //lasciare cosi 34/42
+  drawCylinder(90, c3r2, c3r2, c3h2);
+
+  rotateZ(rad(q[3]*0.7));
+  drawGear(g3s2, g3h2, 24);
+  rotateZ(-rad(q[3]*0.7));
+
+  popMatrix();
+  //end gear motore1
+
+
+
+
+  /*draw gear motore2*/
+  translate(0, 0, -(-g3h/2+a3z/2));
+  rotateY(PI/2);
+
+  drawCylinder(90, c3r3, c3r3, c3h3);
+  box (a3x2, a3y2, a3z2);
+
+  /*end gear motore2*/
+
+
+  /* Gear4 */
+  translate(0, 0, -g3h3/2);
+  rotateZ(rad(q[4]));
+
+  drawGear(g3s3, g3h3, 20);
+
+  /*  L4 (braccio3) */
+
+  translate(0, 0, -c3r);
+  drawCylinder(90, c4r, c4r, c4h);
   
-            rotateZ(rad(q[4]));
-            drawGear(g3s3,g3h3,20);
-
-/*  L4 (braccio3) */ 
-
-            translate(0,0,-c3r); 
-            drawCylinder(90, c4r,c4r, c4h);
-            translate(0,0,-c4h2/2); 
-            drawCylinder(8,c4r2-c4r2/3, c4r2, c4h2);
-            
-            
-
+  rotateY(-PI/2);
   
+  
+  //box(c4r, 2*c4r, c4h);
+  translate(0, 0, c4r);
+  drawCylinder(90, c4r2, c4r2, c4h2);
+  
+  translate(0, 0,-2*(c4r));
+  drawCylinder(90, c4r2, c4r2, c4h2);
+  
+  translate(-a4x/2, 0, 0);
+  
+  box(a4x, a4y, a4z);
+
+  translate(0, 0, 2*c4r);
+  box(a4x, a4y, a4z);
+  
+  
+  translate(-a4x/2, 0, 0);
+  drawCylinder(90, c4r2, c4r2, c4h2);
+  
+  translate(0, 0, -2*c4r);
+  drawCylinder(90, c4r2, c4r2, c4h2);
+  
+  
+  translate(0, 0, c4r);
+  
+  rotateZ(rad(q[5]));
+  
+  noStroke();
+  
+  sphere(c4r-a4z/2);
+  
+  stroke(strokeCol);
+  
+  rotateX(PI/2);
+  
+  translate(0,0,-c4r/2);
+  
+  drawGear(c4r*0.5,c4r*2, 20);
+  
+  /* DRAW AXYS L1*/
+  pushMatrix();
+  rotateY(PI/2);
+  rotateZ(-PI/2);
+  drawAxis(500);
+  popMatrix();
+  
+  //drawCylinder(8, c4r2-c4r2/3, c4r2, c4h2);
 
 }
 
@@ -560,41 +615,3 @@ void drawCylinder( int sides, float r1, float r2, float h)
   //noStroke();
   endShape(CLOSE);
 }
-/*
-void drawCylinder( int sides, float r1, float r2, float h, int stroke)
-{
-  float angle = 360 / sides;
-  float halfHeight = h / 2;
-  noStroke();
-  // top
-  beginShape();
-  for (int i = 0; i < sides; i++) {
-    float x = cos( radians( i * angle ) ) * r1;
-    float y = sin( radians( i * angle ) ) * r1;
-    vertex( x, y, -halfHeight);
-  }
-  endShape(CLOSE);
-  // bottom
-  beginShape();
-  for (int i = 0; i < sides; i++) {
-    float x = cos( radians( i * angle ) ) * r2;
-    float y = sin( radians( i * angle ) ) * r2;
-    vertex( x, y, halfHeight);
-  }
-  endShape(CLOSE);
-  // draw body
-  noStroke();
-  beginShape(TRIANGLE_STRIP);
-  for (int i = 0; i < sides + 1; i++) {
-    float x1 = cos( radians( i * angle ) ) * r1;
-    float y1 = sin( radians( i * angle ) ) * r1;
-    float x2 = cos( radians( i * angle ) ) * r2;
-    float y2 = sin( radians( i * angle ) ) * r2;
-    vertex( x1, y1, -halfHeight);
-    vertex( x2, y2, halfHeight);
-  }
-  stroke(strokeCol);
-  noStroke();
-  endShape(CLOSE);
-}
-*/
