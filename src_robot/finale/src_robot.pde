@@ -12,8 +12,8 @@ float beta = 0;
 float[] q = new float[6]; //DEBUG
 
 // floor coordinates
-float xFloor = 3200;
-float yFloor = 2200;
+float xFloor = 4200;
+float yFloor = 3200;
 float zFloor = 10;
 
 
@@ -104,7 +104,7 @@ float g3s = g2s;
 
 //L3
 
-float a3x  = 700;
+float a3x  = 650;
 float a3y = 2*c2r2;
 float a3z = 30;
  
@@ -132,7 +132,7 @@ void setup() {
   // x,y,z base 
   xBase = width/2;
   zBase = -width/2; //per centrare
-  yBase = -1000;
+  yBase = -1500;
 
  
   gearCol = #AFAFAF;
@@ -219,7 +219,7 @@ void draw() {
 
       xBase = width/2;
       zBase = -width/2;
-      yBase = 0;
+      yBase = -1500;
 
       for (int i=0; i<6; i++) {
         q[i] = 0;
@@ -333,8 +333,11 @@ void draw() {
   
   rotateZ(rad(q[3]));
   
+  
   //braccio3
-  translate(-a3x/2,0,g3h/2-a3z);
+  translate(0 ,0,g3h/2-a3z);
+
+  translate(-a3x/2, 0 ,0 );
   box(a3x,a3y,a3z);
   
   
