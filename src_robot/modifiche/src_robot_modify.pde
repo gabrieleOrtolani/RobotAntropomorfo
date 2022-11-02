@@ -10,12 +10,13 @@ int strokeVar;
 int strokeCol;
 int gearCol;
 int linkCol;
+float[] q = new float[6]; //DEBUG
 
 //rotation angle Y-axis
 float alpha  = 0;
 float beta = 0;
 int segno = -1;
-float[] q = new float[6]; //DEBUG
+
 
 // floor coordinates
 float xFloor = 4200;
@@ -128,16 +129,17 @@ float g3s3 = 0.8*c3r3;
 //aggancio per rotazione
 float c4r = c3r3*0.7;
 float c4h = c3h3*0.7;
-
+//box braccio
 float a4y = 0.6*a3y;
 float a4x  = 0.7*a3x ;
 float a4z = 20;
-
 //cilidri finali
 float c4r2 = a4y/2;
 float c4h2 = c3h;
 
 //L5
+float s5 = c4r-a4z/2;
+
 
 
 
@@ -179,9 +181,9 @@ void setup() {
   smooth();
 
   /* DEBUG ANGOLI INIZIALI */
-  for (int i=0; i<6; i++) {
-    q[i] = 60;
-  }
+  //for (int i=0; i<6; i++) {
+  //  q[i] = 60;
+  //}
 }
 
 
@@ -199,11 +201,11 @@ void draw() {
   //noStroke();
   background(40);
   lights();
-
+  
   // camera((width/2.0), height/2 - eyeY, (height/2.0) / tan(PI*60.0 / 360.0), width/2.0, height/2.0, 0, 0, 1, 0);
   if (mousePressed) {
     xBase = mouseX;
-    zBase = -mouseY-1000;
+    zBase = -mouseY;
   }
 
   /* ENV CONTROL */
@@ -233,22 +235,22 @@ void draw() {
 
     /* ANGLE CONTROL */
     if (key == '1') {
-      q[1] += segno*rad(30);
+      q[0] += segno*rad(30);
     }
     if (key == '2') {
-      q[2] -= segno*rad(30);
+      q[1] -= segno*rad(30);
     }
     if (key == '3') {
-      q[3] += segno*rad(30);
+      q[2] += segno*rad(30);
     }
     if (key == '4') {
-      q[4] += segno*rad(30);
+      q[3] += segno*rad(30);
     }
     if (key == '5') {
-      q[5] += segno*rad(30);
+      q[4] += segno*rad(30);
     }
     if (key == '6') {
-      q[6] += segno* rad(30);
+      q[5] += segno* rad(30);
     }
     if (key == 's') {
       segno = -1*segno;
@@ -290,7 +292,17 @@ void draw() {
   rotateZ(alpha);
   rotateX(beta);
   box(xFloor, yFloor, zFloor);
+  
+  drawRobot(q);
 
+}
+
+
+void events(){
+}
+
+
+void drawRobot(float[] q){
   /*  L0 (base) */
 
   // a0
@@ -324,7 +336,7 @@ void draw() {
 
 
 
-  rotateZ(rad(q[1])); // rotazione 1
+  rotateZ(rad(q[0])); // rotazione 1
 
 
   /*  L1 (base ruotabile) */
@@ -364,7 +376,7 @@ void draw() {
   popMatrix();
 
 
-  rotateZ(rad(q[2])); // rotazione 2 (in realtà rotateY)
+  rotateZ(rad(q[1])); // rotazione 2 (in realtà rotateY)
 
   /* Gear2 */
   drawGear(g2s, g2h, 20); // attuato dal gear g12s
@@ -398,7 +410,7 @@ void draw() {
   drawAxis(500);
   popMatrix();
 
-  rotateZ(rad(q[3]));
+  rotateZ(rad(q[2]));
 
 
   /*  L3 (braccio2) */
@@ -428,15 +440,12 @@ void draw() {
   translate(a3x-sqrt(2)*g3s/2-sqrt(2)*g3s2/2, 0, -(-g3h/2+a3z/2)); //lasciare cosi 34/42
   drawCylinder(90, c3r2, c3r2, c3h2);
 
-  rotateZ(rad(q[3]*0.7));
+  rotateZ(rad(q[2]*0.7));
   drawGear(g3s2, g3h2, 24);
-  rotateZ(-rad(q[3]*0.7));
+  rotateZ(-rad(q[2]*0.7));
 
   popMatrix();
   //end gear motore1
-
-
-
 
   /*draw gear motore2*/
   translate(0, 0, -(-g3h/2+a3z/2));
@@ -450,11 +459,11 @@ void draw() {
 
   /* Gear4 */
   translate(0, 0, -g3h3/2);
-  rotateZ(rad(q[4]));
+  rotateZ(rad(q[3]));
 
   drawGear(g3s3, g3h3, 20);
 
-  /*  L4 (braccio3) */
+/*  L4 (braccio3) */
 
   translate(0, 0, -c3r);
   drawCylinder(90, c4r, c4r, c4h);
@@ -483,32 +492,34 @@ void draw() {
   translate(0, 0, -2*c4r);
   drawCylinder(90, c4r2, c4r2, c4h2);
   
-  
+/*  L5 (sfera) */
   translate(0, 0, c4r);
-  
-  rotateZ(rad(q[5]));
-  
+  rotateZ(rad(q[4])+PI/2);
   noStroke();
-  
-  sphere(c4r-a4z/2);
-  
+  sphere(s5);
   stroke(strokeCol);
   
   rotateX(PI/2);
-  
   translate(0,0,-c4r/2);
   
-  drawGear(c4r*0.5,c4r*2, 20);
-  
-  /* DRAW AXYS L1*/
+/* DRAW AXYS L5*/  
   pushMatrix();
   rotateY(PI/2);
   rotateZ(-PI/2);
   drawAxis(500);
   popMatrix();
   
-  //drawCylinder(8, c4r2-c4r2/3, c4r2, c4h2);
+  
+  
+  rotateZ(rad(q[5]));
+  drawGear(c4r*0.5,c4r*2, 20);
 
+/* DRAW AXYS L5*/
+  pushMatrix();
+  rotateY(PI/2);
+  rotateZ(-PI/2);
+  drawAxis(500);
+  popMatrix();
 }
 
 
