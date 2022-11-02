@@ -10,7 +10,8 @@ int strokeVar;
 int strokeCol;
 int gearCol;
 int linkCol;
-float[] q = new float[6]; //DEBUG
+int ballCol;
+//float[] theta = new float[6]; //DEBUG
 
 //rotation angle Y-axis
 float alpha  = 0;
@@ -49,11 +50,9 @@ float c0h = b0z+chOffset0;  // altezza cilindro
 
 
 // G1
-
 //gear
 float g1s = c0r; //diametro
 float g1h = 30; //altezza
-
 // cilindro sopra il G1
 float c1r = c0r+crOffset0;  //raggio cilindro
 float c1h = g1h/2;  // altezza cilindro
@@ -110,9 +109,9 @@ float c3r = a3y/2;
 float c3h = a3z;
 //gear attuante su gear3
 float g3h2 = g1h*2;
-float g3s2 = g2s*2.1;
+float g3s2 = g2s*1.5;
 //cilindro motore 1
-float c3r2 = g3s2*0.5;
+float c3r2 = g3s2*0.3;
 float c3h2 = 2*(g3h/2-2*GAP+a3z/2);
 //cilindro motore 2
 float c3r3 = c3h2/2+a3z/2;
@@ -123,7 +122,7 @@ float a3x2  = 2*(g3h/2-2*GAP+a3z/2)+2;
 float a3z2 = c3h3;
 //gear attuante su gear4
 float g3h3 = 2*c3h3;
-float g3s3 = 0.8*c3r3;
+float g3s3 = 0.7*c3r3;
 
 //L4
 //aggancio per rotazione
@@ -142,7 +141,27 @@ float s5 = c4r-a4z/2;
 
 
 
+/* MATEMATICA*/
+float d1 = a0z + c0h + g1h + c1h+ a1h/2;
+float l1 = c1h3/2 + a1l/2;
+float l2 = a2x;
+float d4 = c2r1 + a3x + a4x + s5;
+float d6 = c4r*2;
+float errno;
+float theta[] = new float[6];
+float Pw[][] =  new float[3][1];    // matrice 3x1 non inizializzata
+float R36[][] = new float[3][3];
 
+
+//float []theta  = new float[3];
+float Pe[][] = {{0}, {0}, {0}};
+float Re[][] = new float[3][3];
+float[][] Rz_alfa = new float[3][3];
+float[][] Ry = new float[3][3];
+float[][] Rz_theta = new float[3][3];
+
+//coordinate pallina puntatore
+float[] Ball = new float[3];
 
 
 
@@ -156,10 +175,12 @@ float s5 = c4r-a4z/2;
 void setup() {
   // create window
   
+  
+  
   //String os = osSetup();
   
   //fullScreen(P3D);
-  size(1500,1200,P3D);
+  size(1500,1000,P3D);
   strokeVar=1;
   //strokeCol= #FFFFFF;
   strokeCol= #6A4811;
@@ -176,14 +197,13 @@ void setup() {
   //gearCol = #AFAFAF;
   linkCol = #EA9A18;
   gearCol= 150;
+  ballCol = #00FF39;
   //linkCol = #FFED24;
 
   smooth();
 
   /* DEBUG ANGOLI INIZIALI */
-  //for (int i=0; i<6; i++) {
-  //  q[i] = 60;
-  //}
+  
 }
 
 
@@ -201,8 +221,45 @@ void draw() {
   //noStroke();
   background(40);
   lights();
+  for (int i = 0 ; i<3 ; i++){
+
+    Pe[i][0] = Ball[i];// serve per inseguire la pallina
+    theta[i+3] = 90;
+  }
   
-  // camera((width/2.0), height/2 - eyeY, (height/2.0) / tan(PI*60.0 / 360.0), width/2.0, height/2.0, 0, 0, 1, 0);
+  
+  IK();
+
+
+  /* PRINTING */
+  textSize(20);
+  /*
+  text
+   text
+   text
+   */
+  /* END PRINTING */
+
+  events();
+  
+  /* SETTING ENV */
+  rotateX(rad(90));
+
+  /* FLOOR */
+
+  fill(#858B77);
+  translate(xBase, yBase, zBase);
+  rotateZ(alpha);
+  rotateX(beta);
+  box(xFloor, yFloor, zFloor);
+  drawBall();
+  drawRobot(theta);
+
+}
+
+
+void events(){
+    // camera((width/2.0), height/2 - eyeY, (height/2.0) / tan(PI*60.0 / 360.0), width/2.0, height/2.0, 0, 0, 1, 0);
   if (mousePressed) {
     xBase = mouseX;
     zBase = -mouseY;
@@ -235,26 +292,52 @@ void draw() {
 
     /* ANGLE CONTROL */
     if (key == '1') {
-      q[0] += segno*rad(30);
+      theta[0] += segno*rad(30);
     }
     if (key == '2') {
-      q[1] -= segno*rad(30);
+      theta[1] -= segno*rad(30);
     }
     if (key == '3') {
-      q[2] += segno*rad(30);
+      theta[2] += segno*rad(30);
     }
     if (key == '4') {
-      q[3] += segno*rad(30);
+      theta[3] += segno*rad(30);
     }
     if (key == '5') {
-      q[4] += segno*rad(30);
+      theta[4] += segno*rad(30);
     }
     if (key == '6') {
-      q[5] += segno* rad(30);
+      theta[5] += segno* rad(30);
     }
     if (key == 's') {
       segno = -1*segno;
     }
+    
+    
+    
+    
+    if (key == 'X') {
+      Ball[0] += 10;
+    }
+    if (key == 'Y') {
+      Ball[1] += 10;
+    }
+    if (key == 'Z') {
+      Ball[2] += 10;
+    }
+    if (key == 'x') {
+      Ball[0] -= 10;
+    }
+    if (key == 'y') {
+      Ball[1] -= 10;
+    }
+    if (key == 'z') {
+      Ball[2] -= 10;
+    }
+    
+    
+    
+    
     // q=reset
     if (key == 'q') {
       alpha = 0;
@@ -265,46 +348,28 @@ void draw() {
       yBase = -1500;
 
       for (int i=0; i<6; i++) {
-        q[i] = 0;
+        theta[i] = 0;
       }
     }
   }
   /* END ANGLE CONTROL */
-
-
-  /* PRINTING */
-  textSize(20);
-  /*
-  text
-   text
-   text
-   */
-  /* END PRINTING */
-
-
-  /* SETTING ENV */
-  rotateX(rad(90));
-
-  /* FLOOR */
-
-  fill(#858B77);
-  translate(xBase, yBase, zBase);
-  rotateZ(alpha);
-  rotateX(beta);
-  box(xFloor, yFloor, zFloor);
+}
+void drawBall(){
   
-  drawRobot(q);
-
+  noStroke();
+  fill(ballCol);
+  translate(Ball[0],Ball[1],Ball[2]+zFloor);
+  sphere(30);
+  translate(-Ball[0],-Ball[1],-Ball[2]-zFloor);
+  stroke(strokeCol);
 }
-
-
-void events(){
-}
-
 
 void drawRobot(float[] q){
   /*  L0 (base) */
-
+  
+  //translate(l1, 0 ,d1+l2+d4+d6);
+  //box(500,500,1);
+  //translate(-l1, 0 ,-d1-l2-d4-d6);
   // a0
   fill(linkCol);
   translate(0, 0, zFloor/2+a0z/2);
@@ -320,23 +385,15 @@ void drawRobot(float[] q){
   drawCylinder(90, c0r, c0r, c0h);
 
   /* DRAW AXYS L0*/
-
-
   pushMatrix();
   translate(0, 0, -c0h/2-a0z);       // mi sposto per disegnare gli assi
   drawAxis(1000);
   popMatrix();
 
-
-
   /* Gear1 */
   fill(#16B969);
   translate(0, 0, c0h/2+g1h/2);
-
-
-
-
-  rotateZ(rad(q[0])); // rotazione 1
+  rotateZ(rad(theta[0])); // rotazione 1
 
 
   /*  L1 (base ruotabile) */
@@ -356,9 +413,9 @@ void drawRobot(float[] q){
   rotateY(rad(90));
   rotateX(rad(-90));
 
-  rotateZ(rad(-q[2])-rad(10));
+  rotateZ(rad(-theta[2])-rad(10));
   drawGear(g21s, g21h, 20);  // ingranaggio sul box grosso
-  rotateZ(rad(+q[2])+rad(10));
+  rotateZ(rad(+theta[2])+rad(10));
 
   translate(0, a1l, -a1l/2-g21h/2);
   drawCylinder(90, c1r2, c1r2, c1h2); // cilidro davanti
@@ -403,6 +460,8 @@ void drawRobot(float[] q){
 
 
   translate(0, 0, GAP);
+  
+  
   /* DRAW AXYS L1*/
   pushMatrix();
   rotateY(PI);
@@ -410,8 +469,14 @@ void drawRobot(float[] q){
   drawAxis(500);
   popMatrix();
 
-  rotateZ(rad(q[2]));
-
+  rotateZ(rad(theta[2]));
+  
+  /* DRAW AXYS L0*/
+  pushMatrix();
+  rotateY(-PI/2);
+  rotateZ(-PI/2);
+  drawAxis(500);
+  popMatrix();
 
   /*  L3 (braccio2) */
 
@@ -440,9 +505,9 @@ void drawRobot(float[] q){
   translate(a3x-sqrt(2)*g3s/2-sqrt(2)*g3s2/2, 0, -(-g3h/2+a3z/2)); //lasciare cosi 34/42
   drawCylinder(90, c3r2, c3r2, c3h2);
 
-  rotateZ(rad(q[2]*0.7));
+  rotateZ(rad(theta[2]*0.8));
   drawGear(g3s2, g3h2, 24);
-  rotateZ(-rad(q[2]*0.7));
+  rotateZ(-rad(theta[2]*0.8));
 
   popMatrix();
   //end gear motore1
@@ -459,7 +524,7 @@ void drawRobot(float[] q){
 
   /* Gear4 */
   translate(0, 0, -g3h3/2);
-  rotateZ(rad(q[3]));
+  rotateZ(rad(theta[3]));
 
   drawGear(g3s3, g3h3, 20);
 
@@ -494,24 +559,23 @@ void drawRobot(float[] q){
   
 /*  L5 (sfera) */
   translate(0, 0, c4r);
-  rotateZ(rad(q[4])+PI/2);
+  rotateZ(rad(theta[4])+PI/2);
   noStroke();
   sphere(s5);
   stroke(strokeCol);
   
   rotateX(PI/2);
-  translate(0,0,-c4r/2);
-  
-/* DRAW AXYS L5*/  
+  /* DRAW AXYS L5*/  
   pushMatrix();
   rotateY(PI/2);
   rotateZ(-PI/2);
   drawAxis(500);
   popMatrix();
   
+  translate(0,0,-c4r);
   
   
-  rotateZ(rad(q[5]));
+  rotateZ(rad(theta[5]));
   drawGear(c4r*0.5,c4r*2, 20);
 
 /* DRAW AXYS L5*/
