@@ -393,7 +393,7 @@ void drawRobot(float[] q){
   /* Gear1 */
   fill(#16B969);
   translate(0, 0, c0h/2+g1h/2);
-  rotateZ(rad(theta[0])); // rotazione 1
+  rotateZ(theta[0]); // rotazione 1
 
 
   /*  L1 (base ruotabile) */
@@ -413,9 +413,9 @@ void drawRobot(float[] q){
   rotateY(rad(90));
   rotateX(rad(-90));
 
-  rotateZ(rad(-theta[2])-rad(10));
+  rotateZ(-theta[2]-rad(10));
   drawGear(g21s, g21h, 20);  // ingranaggio sul box grosso
-  rotateZ(rad(+theta[2])+rad(10));
+  rotateZ(theta[2]+rad(10));
 
   translate(0, a1l, -a1l/2-g21h/2);
   drawCylinder(90, c1r2, c1r2, c1h2); // cilidro davanti
@@ -433,7 +433,7 @@ void drawRobot(float[] q){
   popMatrix();
 
 
-  rotateZ(rad(q[1])); // rotazione 2 (in realtà rotateY)
+  rotateZ(theta[1]); // rotazione 2 (in realtà rotateY)
 
   /* Gear2 */
   drawGear(g2s, g2h, 20); // attuato dal gear g12s
@@ -469,7 +469,7 @@ void drawRobot(float[] q){
   drawAxis(500);
   popMatrix();
 
-  rotateZ(rad(theta[2]));
+  rotateZ(theta[2]);
   
   /* DRAW AXYS L0*/
   pushMatrix();
@@ -505,9 +505,9 @@ void drawRobot(float[] q){
   translate(a3x-sqrt(2)*g3s/2-sqrt(2)*g3s2/2, 0, -(-g3h/2+a3z/2)); //lasciare cosi 34/42
   drawCylinder(90, c3r2, c3r2, c3h2);
 
-  rotateZ(rad(theta[2]*0.8));
+  rotateZ(theta[2]*0.8);
   drawGear(g3s2, g3h2, 24);
-  rotateZ(-rad(theta[2]*0.8));
+  rotateZ(-theta[2]*0.8);
 
   popMatrix();
   //end gear motore1
@@ -524,7 +524,7 @@ void drawRobot(float[] q){
 
   /* Gear4 */
   translate(0, 0, -g3h3/2);
-  rotateZ(rad(theta[3]));
+  rotateZ(theta[3]);
 
   drawGear(g3s3, g3h3, 20);
 
@@ -559,7 +559,7 @@ void drawRobot(float[] q){
   
 /*  L5 (sfera) */
   translate(0, 0, c4r);
-  rotateZ(rad(theta[4])+PI/2);
+  rotateZ(theta[4]+PI/2);
   noStroke();
   sphere(s5);
   stroke(strokeCol);
@@ -575,7 +575,7 @@ void drawRobot(float[] q){
   translate(0,0,-c4r);
   
   
-  rotateZ(rad(theta[5]));
+  rotateZ(theta[5]);
   drawGear(c4r*0.5,c4r*2, 20);
 
 /* DRAW AXYS L5*/
