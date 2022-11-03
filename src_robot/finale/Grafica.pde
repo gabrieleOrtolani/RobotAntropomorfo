@@ -2,7 +2,7 @@ void drawBall(){
   
   noStroke();
   fill(ballCol);
-  translate(Ball[0],Ball[1],Ball[2]-c0h/2-a0z);
+  translate(Ball[0],Ball[1]-15,Ball[2]-c0h/2-a0z);
   sphere(30);
   translate(-Ball[0],-Ball[1],-Ball[2]+c0h/2+a0z);
   stroke(strokeCol);
@@ -147,7 +147,7 @@ void drawRobot(){
 
   /* Gear4 */
   translate(0, 0, -g3h3/2);
-  rotateZ(-theta[3]+rad(90));  // -----------> Rotazione 4
+  rotateZ(theta[3]-rad(90));  // -----------> Rotazione 4
   drawGear(g3s3, g3h3, 20);
 
 
@@ -174,7 +174,7 @@ void drawRobot(){
   /* L5 (sfera) */
   translate(0, 0, c4r);
   rotateZ(rad(90));
-  rotateZ(theta[4]);  // -----------> Rotazione 5
+  rotateZ(-theta[4]+rad(90));  // -----------> Rotazione 5
   noStroke();
   sphere(s5);
   stroke(strokeCol);

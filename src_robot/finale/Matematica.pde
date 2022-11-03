@@ -47,11 +47,12 @@ float[][] Rz_calc(float angle){
   return my_Rz;                   
 }
 float[][] Ry_calc(float angle){
-  float[][] my_Ry = {{cos(90-angle),0,sin(90-angle)},
+  float[][] my_Ry = {{cos(PI/2-angle),0,sin(PI/2-angle)},
                      {0,1,0},
-                     {-sin(90-angle),0,cos(90-angle)}};
+                     {-sin(PI/2-angle),0,cos(PI/2-angle)}};
   return my_Ry;                   
 } 
+ 
 
 
 float calcoloTheta3(float A1, float A2){

@@ -181,10 +181,11 @@ void draw() {
   Pe[0][0] = Ball[1];
   Pe[1][0] = Ball[0];
   Pe[2][0] = Ball[2];
+  /*
   theta[3] = rad(90);
   theta[4] = rad(90);
   theta[5] = rad(0);
-  
+  */
   
   /* PRINTING */
   //textSize(20);
@@ -267,6 +268,25 @@ void events(){
     }
     if (key == 'z') {
       Ball[2] -= 10;
+    }
+    /*controllo alpha beta e tetha*/
+    if (key == 'A') {
+      theta[3] += rad(5);
+    }
+    if (key == 'B') {
+      theta[4] += rad(5);
+    }
+    if (key == 'O') {
+      theta[5] += rad(5);
+    }
+    if (key == 'a') {
+      theta[3] -= rad(5);
+    }
+    if (key == 'b') {
+      theta[4] -= rad(5);
+    }
+    if (key == 'o') {
+      theta[5] -= rad(5);
     }
     
     /* ENV RESET */
