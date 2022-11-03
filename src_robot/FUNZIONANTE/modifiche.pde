@@ -1,5 +1,7 @@
 import com.jogamp.opengl.GLProfile;
-{GLProfile.initSingleton();}
+{
+  GLProfile.initSingleton();
+}
 
 
 /* General variables for stroke/color */
@@ -153,9 +155,9 @@ boolean manualControl = false;
 
 void setup() {
   /* Create Window */
-  size(1500,1000,P3D); //fullScreen(P3D);
-  smooth(8);  // 8x anti-aliasing 
-  
+  size(1500, 1000, P3D); //fullScreen(P3D);
+  smooth(8);  // 8x anti-aliasing
+
   stroke(strokeCol);
   strokeWeight(strokeVar);
 
@@ -164,12 +166,9 @@ void setup() {
   zBase = -width/2;
   yBase = baseDeep;
 
-  
   Ball[0] = initB0;
   Ball[1] = initB1;
   Ball[2] = initB2;
-  
-
 }
 
 
@@ -177,28 +176,28 @@ void setup() {
 void draw() {
   background(40);
   lights();
-  
+
   /*DEBUG*/
   /*
   for (int i = 0 ; i<3 ; i++) {
-    Pe[i][0] = -Ball[i];// serve per inseguire la pallina
-    theta[i+3] = rad(90);
-  }
-  */
-  
+   Pe[i][0] = -Ball[i];// serve per inseguire la pallina
+   theta[i+3] = rad(90);
+   }
+   */
+
   Pe[0][0] = Ball[1];
   Pe[1][0] = Ball[0];
   Pe[2][0] = Ball[2];
   /* PRINTING */
   //textSize(20);
   /* END PRINTING */
-  
-  if(manualControl == false) {
+
+  if (manualControl == false) {
     IK();  // Calcolo cinematica inversa
   }
-  
+
   events(); // Pressione tasti e mouse
-  
+
   /* SETTING ENV */
   rotateX(rad(90));
 
@@ -208,31 +207,29 @@ void draw() {
   rotateZ(alpha);
   rotateX(beta);
   box(xFloor, yFloor, zFloor);
-  
-  
-  
+
   /*
   theta[0] = rad(80);
-  theta[1] = rad(30);
-  theta[2] = rad(110);
-  theta[3] = rad(-90);
-  theta[4] = rad(-70);
-  theta[5] = rad(90);
-  */
+   theta[1] = rad(30);
+   theta[2] = rad(110);
+   theta[3] = rad(-90);
+   theta[4] = rad(-70);
+   theta[5] = rad(90);
+   */
 
   drawRobot();
 }
 
 
 
-void events(){
+void events() {
   /* ENV CONTROL */
   if (mousePressed) {
     xBase = mouseX;
     zBase = -mouseY;
   }
-  
-  
+
+
   if (keyPressed) {
     if (keyCode == RIGHT)
     {
@@ -254,63 +251,52 @@ void events(){
       beta -= rad(1);
     }
     /* END ENV CONTROL*/
- 
- 
-    /* POSIZIONE DESIDERATA */   
-    if (key == 'X') {
-      Ball[0] += 10;
+
+
+    /* POSIZIONE DESIDERATA */
+    if (key == 'x' || key == 'X') {
+      Ball[0] += segno*10;
     }
-    if (key == 'Y') {
-      Ball[1] += 10;
+    if (key == 'y' || key == 'Y') {
+      Ball[1] += segno*10;
     }
-    if (key == 'Z') {
-      Ball[2] += 10;
+    if (key == 'z' || key == 'Z') {
+      Ball[2] += segno*10;
     }
-    if (key == 'x') {
-      Ball[0] -= 10;
+    /* END POSIZIONE DESIDERATA */
+
+
+    /* CONTROLLO ALPHA BETA E THETA */
+    if (key == 'a' || key == 'A') {
+      angles[0] += segno*rad(5);
     }
-    if (key == 'y') {
-      Ball[1] -= 10;
+    if (key == 'b' || key == 'B') {
+      angles[1] += segno*rad(5);
     }
-    if (key == 'z') {
-      Ball[2] -= 10;
+    if (key == 'o' || key == 'O') {
+      angles[2] += segno*rad(5);
     }
-    /*controllo alpha beta e tetha*/
-    if (key == 'A') {
-      angles[0] += rad(5);
-    }
-    if (key == 'B') {
-      angles[1] += rad(5);
-    }
-    if (key == 'O') {
-      angles[2] += rad(5);
-    }
-    if (key == 'a') {
-      angles[0] -= rad(5);
-    }
-    if (key == 'b') {
-     angles[1] -= rad(5);
-    }
-    if (key == 'o') {
-      angles[2]-= rad(5);
-    }
-    /*gomito*/
+    /* CONTROLLO ALPHA BETA E THETA */
+
+
+    /* GOMITO */
     if (key == '+') {
-     gomito *= gomito;
+      gomito *= gomito;
     }
     if (key == '-') {
       gomito *= -gomito;
     }
-    
-    
+    /* END GOMITO */
+
+
     /* MANUAL/AUTOMATIC */
     if (key == 'm' || key == 'M') {
       manualControl = !manualControl;
       delay(200);
     }
     /* END MANUAL/AUTOMATIC */
-    
-    
+
+
     /* ENV RESET */
     if (key == 'q' || key == 'Q') {
       alpha = 0;
@@ -321,19 +307,19 @@ void events(){
       yBase = baseDeep;
 
 
-      if(manualControl == true) {
+      if (manualControl == true) {
         for (int i=0; i<6; i++)
           theta[i] = 0;
       }
-      
+
       Ball[0] = initB0;
       Ball[1] = initB1;
       Ball[2] = initB2;
     }
-    
-    
+
+
     /* ANGLE CONTROL */
-    if(manualControl == true) {
+    if (manualControl == true) {
       if (key == '1') {
         theta[0] += segno*rad(1);
       }
@@ -350,13 +336,16 @@ void events(){
         theta[4] += segno*rad(1);
       }
       if (key == '6') {
-        theta[5] += segno* rad(1);
-      }
-      if (key == 's') {
-        segno = -1*segno;
-        delay(200);
+        theta[5] += segno*rad(1);
       }
     }
     /* END ANGLE CONTROL */
+
+    /* SEGNO */
+    if (key == 's' || key == 'S') {
+      segno = -1*segno;
+      delay(200);
+    }
+    /* END SEGNO */
   }
 }

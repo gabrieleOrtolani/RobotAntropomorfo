@@ -216,14 +216,39 @@ void drawRobot(){
 
 void drawAxis(float lineLenght) {
   strokeWeight(4); //ricorda-->4
+  
   stroke(0, 255, 0);
-  line(0, 0, 0, lineLenght, 0, 0); // x = r
+  fill(0, 255, 0);
+  
+  pushMatrix();
+  line(0, 0, 0, lineLenght, 0, 0); // y = green
+  translate(lineLenght, 0, 0);
+  rotateY(rad(90));
+  drawCylinder(30, 15, 0, 30);
+  popMatrix();
+  
   stroke(255, 0, 0);
-  line(0, 0, 0, 0, lineLenght, 0); // y = g
+  fill(255, 0, 0);
+ 
+  pushMatrix();
+  line(0, 0, 0, 0, lineLenght, 0); // x = red
+  translate(0, lineLenght, 0);
+  rotateX(rad(-90));
+  drawCylinder(30, 15, 0, 30);
+  popMatrix();
+  
   stroke(0, 0, 255);
-  line(0, 0, 0, 0, 0, lineLenght); // z = b
+  fill(0, 0, 255);
+  
+  pushMatrix();
+  line(0, 0, 0, 0, 0, lineLenght); // z = blue
+  translate(0, 0, lineLenght);
+  drawCylinder(30, 15, 0, 30);
+  popMatrix();
+  
   strokeWeight(strokeVar);
   stroke(strokeCol);
+  fill(linkCol);
 }
 
 
@@ -248,7 +273,7 @@ void drawCylinder( int sides, float r1, float r2, float h)
 {
   float angle = 360 / sides;
   float halfHeight = h / 2;
-  //noStroke();
+  
   // top
   beginShape();
   for (int i = 0; i < sides; i++) {
@@ -257,6 +282,7 @@ void drawCylinder( int sides, float r1, float r2, float h)
     vertex( x, y, -halfHeight);
   }
   endShape(CLOSE);
+  
   // bottom
   beginShape();
   for (int i = 0; i < sides; i++) {
@@ -265,6 +291,7 @@ void drawCylinder( int sides, float r1, float r2, float h)
     vertex( x, y, halfHeight);
   }
   endShape(CLOSE);
+  
   // draw body
   noStroke();
   beginShape(TRIANGLE_STRIP);
@@ -277,6 +304,5 @@ void drawCylinder( int sides, float r1, float r2, float h)
     vertex( x2, y2, halfHeight);
   }
   stroke(strokeCol);
-  //noStroke();
   endShape(CLOSE);
 }
