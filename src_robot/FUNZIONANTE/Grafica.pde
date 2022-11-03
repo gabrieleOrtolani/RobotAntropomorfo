@@ -61,15 +61,14 @@ void drawRobot(){
 
   /* DRAW AXYS L1 */
   pushMatrix();
-  rotateY(rad(180));
-  rotateZ(rad(-90));
+  rotateZ(rad(180));
   drawAxis(500);
   popMatrix();
-  rotateZ((-theta[1]+rad(90))); // -----------> Rotazione 2 (in realtà rotateY)
-
+  
 
 
   /* Gear2 */
+  rotateZ((-theta[1]+rad(90))); // -----------> Rotazione 2 (in realtà rotateY)
   drawGear(g2s, g2h, 20); // attuato dal gear g12s
   translate(0, 0, -g2h/2-a2z/2);
   drawCylinder(90, c2r1, c2r1, c2h);
@@ -91,20 +90,18 @@ void drawRobot(){
   
   
   
-  /* DRAW AXYS L1 */
+  /* DRAW AXYS L2 */
   pushMatrix();
-  rotateY(rad(180));
-  rotateZ(rad(-90));
+  rotateZ(rad(90));
   drawAxis(500);
   popMatrix();
+
+  
+  
+  /* DRAW AXYS L3 */
   rotateZ(-theta[2]+rad(90));  // -----------> Rotazione 3
-  
-  
-  
-  /* DRAW AXYS L0 */
   pushMatrix();
   rotateY(rad(-90));
-  rotateZ(rad(-90));
   drawAxis(500);
   popMatrix();
 
@@ -182,21 +179,34 @@ void drawRobot(){
   
   
   
-  /* DRAW AXYS L5 */  
+  /* DRAW AXYS L4 */  
   pushMatrix();
-  rotateY(rad(90));
+  rotateX(rad(-90));
   rotateZ(rad(-90));
   drawAxis(500);
   popMatrix();
+
+  
+  
+  /* DRAW AXYS L5 */  
+  pushMatrix();
+  rotateX(rad(180));
+  rotateZ(rad(-90));
+  drawAxis(500);
+  popMatrix();  
+  
+  
+  
   translate(0,0,-c4r);
   rotateZ(theta[5]);  // -----------> Rotazione 6
-  drawGear(c4r*0.5,c4r*2, 20);
+  drawGear(c4r/2,c4r*2, 20);
+  translate(0,0,-c4r);
 
 
 
   /* DRAW AXYS L6 */
   pushMatrix();
-  rotateY(rad(90));
+  rotateX(rad(180));
   rotateZ(rad(-90));
   drawAxis(500);
   popMatrix();
@@ -205,10 +215,10 @@ void drawRobot(){
 
 
 void drawAxis(float lineLenght) {
-  strokeWeight(0); //ricorda-->4
-  stroke(255, 0, 0);
-  line(0, 0, 0, lineLenght, 0, 0); // x = r
+  strokeWeight(4); //ricorda-->4
   stroke(0, 255, 0);
+  line(0, 0, 0, lineLenght, 0, 0); // x = r
+  stroke(255, 0, 0);
   line(0, 0, 0, 0, lineLenght, 0); // y = g
   stroke(0, 0, 255);
   line(0, 0, 0, 0, 0, lineLenght); // z = b

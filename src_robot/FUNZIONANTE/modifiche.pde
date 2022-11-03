@@ -143,6 +143,11 @@ float[][] Ry = new float[3][3];
 float[][] Rz_theta = new float[3][3];
 
 float[] Ball = new float[3];        // coordinate pallina puntatore
+float initB0 = 1000;
+float initB1 = 100;
+float initB2 = 500;
+
+boolean manualControl = false;
 
 
 
@@ -160,9 +165,9 @@ void setup() {
   yBase = baseDeep;
 
   
-  //Ball[0] = 1000;
-  //Ball[1] = 100;
-  //Ball[2] = 500;
+  Ball[0] = initB0;
+  Ball[1] = initB1;
+  Ball[2] = initB2;
   
 
 }
@@ -188,7 +193,9 @@ void draw() {
   //textSize(20);
   /* END PRINTING */
   
-  IK();  // Calcolo cinematica inversa
+  if(manualControl == false) {
+    IK();  // Calcolo cinematica inversa
+  }
   
   events(); // Pressione tasti e mouse
   
@@ -225,6 +232,7 @@ void events(){
     zBase = -mouseY;
   }
   
+  
   if (keyPressed) {
     if (keyCode == RIGHT)
     {
@@ -245,7 +253,8 @@ void events(){
     if (key == '0') {
       beta -= rad(1);
     }
-  /* END ENV CONTROL*/
+    /* END ENV CONTROL*/
+ 
  
     /* POSIZIONE DESIDERATA */   
     if (key == 'X') {
@@ -293,8 +302,17 @@ void events(){
       gomito *= -gomito;
     }
     
+    
+    /* MANUAL/AUTOMATIC */
+    if (key == 'm' || key == 'M') {
+      manualControl = !manualControl;
+      delay(200);
+    }
+    /* END MANUAL/AUTOMATIC */
+    
+    
     /* ENV RESET */
-    if (key == 'q') {
+    if (key == 'q' || key == 'Q') {
       alpha = 0;
       beta = 0;
 
@@ -302,37 +320,43 @@ void events(){
       zBase = -width/2;
       yBase = baseDeep;
 
-      for (int i=0; i<6; i++) {
-        theta[i] = 0;
+
+      if(manualControl == true) {
+        for (int i=0; i<6; i++)
+          theta[i] = 0;
       }
-        Ball[0] = 0;
-        Ball[1] = 0;
-        Ball[2] = 0;
+      
+      Ball[0] = initB0;
+      Ball[1] = initB1;
+      Ball[2] = initB2;
     }
+    
+    
     /* ANGLE CONTROL */
-    /*
-    if (key == '1') {
-      theta[0] += segno*rad(30);
+    if(manualControl == true) {
+      if (key == '1') {
+        theta[0] += segno*rad(1);
+      }
+      if (key == '2') {
+        theta[1] -= segno*rad(1);
+      }
+      if (key == '3') {
+        theta[2] += segno*rad(1);
+      }
+      if (key == '4') {
+        theta[3] += segno*rad(1);
+      }
+      if (key == '5') {
+        theta[4] += segno*rad(1);
+      }
+      if (key == '6') {
+        theta[5] += segno* rad(1);
+      }
+      if (key == 's') {
+        segno = -1*segno;
+        delay(200);
+      }
     }
-    if (key == '2') {
-      theta[1] -= segno*rad(30);
-    }
-    if (key == '3') {
-      theta[2] += segno*rad(30);
-    }
-    if (key == '4') {
-      theta[3] += segno*rad(30);
-    }
-    if (key == '5') {
-      theta[4] += segno*rad(30);
-    }
-    if (key == '6') {
-      theta[5] += segno* rad(30);
-    }
-    if (key == 's') {
-      segno = -1*segno;
-    }
-    /* END ANGLE CONTROL 
-    */ 
+    /* END ANGLE CONTROL */
   }
 }
