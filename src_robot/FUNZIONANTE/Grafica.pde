@@ -34,7 +34,7 @@ void drawRobot(){
   /* Gear1 */
   fill(#16B969);
   translate(0, 0, c0h/2+g1h/2);
-  rotateZ(-theta[0]+rad(90)); // -----------> Rotazione 1
+  rotateZ((-theta[0]+rad(90))); // -----------> Rotazione 1
   drawGear(g1s, g1h, 10);
 
 
@@ -65,7 +65,7 @@ void drawRobot(){
   rotateZ(rad(-90));
   drawAxis(500);
   popMatrix();
-  rotateZ(-theta[1]+rad(90)); // -----------> Rotazione 2 (in realtà rotateY)
+  rotateZ((-theta[1]+rad(90))); // -----------> Rotazione 2 (in realtà rotateY)
 
 
 
@@ -147,7 +147,7 @@ void drawRobot(){
 
   /* Gear4 */
   translate(0, 0, -g3h3/2);
-  rotateZ(theta[3]-rad(90));  // -----------> Rotazione 4
+  rotateZ(theta[3]);  // -----------> Rotazione 4
   drawGear(g3s3, g3h3, 20);
 
 
@@ -174,7 +174,7 @@ void drawRobot(){
   /* L5 (sfera) */
   translate(0, 0, c4r);
   rotateZ(rad(90));
-  rotateZ(-theta[4]+rad(90));  // -----------> Rotazione 5
+  rotateZ(-theta[4]);    // -----------> Rotazione 5
   noStroke();
   sphere(s5);
   stroke(strokeCol);

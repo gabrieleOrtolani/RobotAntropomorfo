@@ -2,9 +2,9 @@
 void IK(){
   float vetCol[][] = new float[3][1];
   float A1 = 0, A2 = 0;
-  Rz_alfa = Rz_calc(theta[3]);    // ----->ricontrollare 
-  Rz_theta = Rz_calc(theta[5]);
-  Ry = Ry_calc(theta[4]);
+  Rz_alfa = Rz_calc(angles[0]);    // ----->ricontrollare 
+  Rz_theta = Rz_calc(angles[2]);
+  Ry = Ry_calc(angles[1]);
   Re = mProd(Rz_alfa,Ry);
   Re = mProd(Re,Rz_theta);
   scriviMatrice("R_e", Re, 500, 200);
@@ -29,17 +29,76 @@ void IK(){
   text(A2, 100, 660);
   
   // calcolo di theta3
-  theta[2] = calcoloTheta3(A1, A2);
+  theta[2] =gomito*calcoloTheta3(A1, A2);
   text("Theta2:", 200, 300);
   text(theta[2]*180/PI, 200, 330);
   
   // calcolo di theta2
-  theta[1] = atan2(d4*cos(theta[2])*A1 - (d4*sin(theta[2])+l2)*A2, (d4*sin(theta[2])+l2)*A1 + d4*cos(theta[2])*A2);
+  theta[1] = gomito*atan2(d4*cos(theta[2])*A1 - (d4*sin(theta[2])+l2)*A2, (d4*sin(theta[2])+l2)*A1 + d4*cos(theta[2])*A2);
   text("Theta1:", 200, 400);
-  text(theta[1]*180/PI, 200, 430);  
+  text(theta[1]*180/PI, 200, 430); 
+  
+ float R03[][] = {{cos(theta[0])*cos(theta[1]+theta[2]), sin(theta[0]), cos(theta[0])*sin(theta[1]+theta[2])},
+        {sin(theta[0])*cos(theta[1]+theta[2]), -cos(theta[0]), sin(theta[0])*sin(theta[1]+theta[2])},
+        {sin(theta[1]+theta[2]), 0, -cos(theta[1]+theta[2])}}; //ROTAZIONE POLSO-BASE
+  scriviMatrice("R_03", R03, 200, 500); 
+  //R36 = mProd(trasposta(R03), Re);
+  /*
+  R36[0][0] = cos(theta[3])*cos(theta[4])*cos(theta[5])- sin(theta[3])*sin(theta[5]);
+  R36[0][1] = -cos(theta[3])*cos(theta[4])*cos(theta[5])- sin(theta[3])*sin(theta[5]);
+  R36[0][2] = cos(theta[3])*sin(theta[4]);
+  
+  R36[1][0] = sin(theta[3])*cos(theta[4])*cos(theta[5])- cos(theta[3])*sin(theta[5]);
+  R36[1][1] = -sin(theta[3])*cos(theta[4])*cos(theta[5])+ cos(theta[3])*sin(theta[5]);
+  R36[1][2] = sin(theta[3])*sin(theta[4]);
+  
+  R36[2][0] = -sin(theta[4])*cos(theta[5]);
+  R36[2][1] = sin(theta[4])*sin(theta[5]);
+  R36[2][2] = cos(theta[5]);
+  scriviMatrice("R_36", R36, 200, 650);
+  */
+  R36 = mProd(trasposta(R03), Re);
+  scriviMatrice("R_36", R36, 800, 650);
+  calcoloAtan2();
+  
  
 
 }
+void calcoloAtan2(){
+  theta[4] = (atan2(sqrt(pow(R36[0][2], 2) + pow(R36[1][2], 2)), R36[2][2]));
+  text("Theta5:", 400, 200);
+  text(theta[4]*180/PI, 400, 230); 
+  
+
+  if(theta[4] == 0){
+    theta[5] = deg(80);
+    theta[3] = atan2(R36[1][0], R36[0][0]) - theta[5];
+    
+    text("Theta4:", 400, 300);
+    text(theta[3]*180/PI, 400, 330);
+    text("Theta6:", 400, 400);
+    text(theta[5]*180/PI, 400, 430);
+  }
+  else if(theta[4] == 180){
+    theta[5] = deg(70);
+    theta[3] = atan2(-R36[1][0], -R36[0][0]) + theta[5];
+    
+    text("Theta4:", 400, 300);
+    text(theta[3]*180/PI, 400, 330);
+    text("Theta6:", 400, 400);
+    text(theta[5]*180/PI, 400, 430);
+  }
+  else{
+    theta[3] = atan2(R36[1][2], R36[0][2]);
+    text("Theta4:", 400, 300);
+    text(theta[3]*180/PI, 400, 330); 
+    
+    theta[5] = atan2(R36[2][1], -R36[2][0]);
+    text("Theta6:", 400, 400);
+    text(theta[5]*180/PI, 400, 430); 
+  }
+}
+
 float[][] Rz_calc(float angle){
   float[][] my_Rz = {{cos(angle),-sin(angle),0},
                      {sin(angle),cos(angle),0},

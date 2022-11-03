@@ -113,7 +113,7 @@ float c4r = c3r3*0.7;
 float c4h = c3h3*0.7;
 //box braccio
 float a4y = 0.6*a3y;
-float a4x  = 0.7*a3x ;
+float a4x  = 0.8*a3x ;
 float a4z = 20;
 //cilidri finali
 float c4r2 = a4y/2;
@@ -130,11 +130,12 @@ float l1 = a1l/2 + c1r3;                   //OK
 float l2 = a2x;                            //OK
 float d4 = a3x + g3h3 + a4x;               //OK
 float d6 = c4r*2;                          //OK
-float errno;
+
 float theta[] = new float[6];
 float Pw[][] =  new float[3][1];    // matrice 3x1 non inizializzata
 float R36[][] = new float[3][3];
-
+float gomito = 1;
+float[] angles = new float[3];     // angles[0]=alpha....
 float Pe[][] = {{0}, {0}, {0}};
 float Re[][] = new float[3][3];
 float[][] Rz_alfa = new float[3][3];
@@ -162,6 +163,8 @@ void setup() {
   //Ball[0] = 1000;
   //Ball[1] = 100;
   //Ball[2] = 500;
+  
+
 }
 
 
@@ -181,16 +184,10 @@ void draw() {
   Pe[0][0] = Ball[1];
   Pe[1][0] = Ball[0];
   Pe[2][0] = Ball[2];
-  /*
-  theta[3] = rad(90);
-  theta[4] = rad(90);
-  theta[5] = rad(0);
-  */
-  
   /* PRINTING */
   //textSize(20);
   /* END PRINTING */
-
+  
   IK();  // Calcolo cinematica inversa
   
   events(); // Pressione tasti e mouse
@@ -215,7 +212,7 @@ void draw() {
   theta[4] = rad(-70);
   theta[5] = rad(90);
   */
-  
+
   drawRobot();
 }
 
@@ -271,22 +268,29 @@ void events(){
     }
     /*controllo alpha beta e tetha*/
     if (key == 'A') {
-      theta[3] += rad(5);
+      angles[0] += rad(5);
     }
     if (key == 'B') {
-      theta[4] += rad(5);
+      angles[1] += rad(5);
     }
     if (key == 'O') {
-      theta[5] += rad(5);
+      angles[2] += rad(5);
     }
     if (key == 'a') {
-      theta[3] -= rad(5);
+      angles[0] -= rad(5);
     }
     if (key == 'b') {
-      theta[4] -= rad(5);
+     angles[1] -= rad(5);
     }
     if (key == 'o') {
-      theta[5] -= rad(5);
+      angles[2]-= rad(5);
+    }
+    /*gomito*/
+    if (key == '+') {
+     gomito *= gomito;
+    }
+    if (key == '-') {
+      gomito *= -gomito;
     }
     
     /* ENV RESET */
