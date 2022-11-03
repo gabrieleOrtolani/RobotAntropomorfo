@@ -2,13 +2,13 @@
 void IK(){
   float vetCol[][] = new float[3][1];
   float A1 = 0, A2 = 0;
-  Rz_alfa = Rz_calc(90);
-  Rz_theta = Rz_calc(90);
-  Ry = Ry_calc(90);
+  Rz_alfa = Rz_calc(theta[3]);    // ----->ricontrollare 
+  Rz_theta = Rz_calc(theta[5]);
+  Ry = Ry_calc(theta[4]);
   Re = mProd(Rz_alfa,Ry);
   Re = mProd(Re,Rz_theta);
   scriviMatrice("R_e", Re, 500, 200);
-  vetCol = CalcoloPw(Pe, Re, d6);
+  vetCol = CalcoloPw(Re, d6);
   scriviVettoreCol("d6*a_e:", vetCol, 100, 200);
   
   Pw = mSum(Pe, vetCol);
@@ -19,7 +19,7 @@ void IK(){
   textSize(20);
   fill(255);
   text("Theta0:", 100, 500);
-  text(theta[0], 100, 530);
+  text(theta[0]*180/PI +"°", 100, 530);    // modificato
   
   A1 = Pw[0][0]*cos(theta[0]) + Pw[1][0]*sin(theta[0]) - l1;
   A2 = d1 - Pw[2][0];
@@ -30,12 +30,12 @@ void IK(){
   
   // calcolo di theta3
   theta[2] = calcoloTheta3(A1, A2);
-  text("Theta3:", 200, 300);
+  text("Theta2:", 200, 300);
   text(theta[2]*180/PI, 200, 330);
   
   // calcolo di theta2
   theta[1] = atan2(d4*cos(theta[2])*A1 - (d4*sin(theta[2])+l2)*A2, (d4*sin(theta[2])+l2)*A1 + d4*cos(theta[2])*A2);
-  text("Theta2:", 200, 400);
+  text("Theta1:", 200, 400);
   text(theta[1]*180/PI, 200, 430);  
  
 
@@ -84,7 +84,7 @@ float[][] mProd(float[][] A,float[][] B) // Calcola prodotto di due matrici A e 
   }
   return C;
 }
-float[][] CalcoloPw(float[][] Pe, float[][] Re, float d6){
+float[][] CalcoloPw(float[][] Re, float d6){
   float res[][] = new float[3][1];
   
   for(int i=0; i<3; i++){
@@ -147,4 +147,14 @@ float[][] trasposta(float[][] A) // Calcola la trasposta di una matrice A
     }
   }
   return C;
+}
+
+/* Convertitore da gradi a radianti */
+float rad(float degree) {
+  return degree * PI/180.0;
+}
+
+/* Convertitore da radianti a gradi */
+float deg(float radians) {
+  return radians * 180.0/PI;
 }
