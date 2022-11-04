@@ -193,20 +193,22 @@ void draw() {
  
   
   if(segno==-1){
-    textSize(30);
+    textSize(100);
     fill(220,0,0);
-    text("-",10,20);
+    text("-",width/2,70);
     textSize(20);
   }
   if(segno==1){
-    textSize(30);
+    textSize(100);
     fill(0,220,0);
-    text("+",10,20);
+    text("+",width/2,70);
     textSize(20);
   }  
   
       fill(255);
-      text(kp, 300,300);
+      text("K  =",20,100);
+      text("p",30,105);
+      text(kp, 50,100);
       
       
       

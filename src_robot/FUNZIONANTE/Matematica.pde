@@ -8,17 +8,17 @@ void IK(){
   Re = mProd(Rz_alfa,Ry);
   Re = mProd(Re,Rz_theta);
   fill(255);
-  text("R    =",20,800);
-  text("e",30,805);
-  scriviRe("", Re, 60, 800);
+  text("R    =",1160,50);
+  text("e",1170,55);
+  scriviRe("", Re, 1200, 30);
   
   vetCol = CalcoloPw(Re, d6);
   //scriviVettoreCol("d6*a_e:", vetCol, 100, 200);  //stampa di debug
   
   Pw = mSum(Pe, vetCol);
-  text("P    =",20,140);
-  text("w",30,145);
-  scriviVettoreCol("", Pw, 60, 100);
+  text("P    =",20,50);
+  text("w",30,55);
+  scriviVettoreCol("", Pw, 60, 15);
   
   // calcolo di theta1
   theta[0] = atan2(Pw[1][0], Pw[0][0]);
@@ -168,11 +168,11 @@ void scriviVettoreCol(String s, float[][] M, int x, int y) // Scrive una matrice
   fill(255);
   text(s,x,y); 
   fill(255,0,0);
-  text(M[0][0],x,y+20);
+  text(truncate(M[0][0])+"",x,y+20);
   fill(0,255,0);
-  text(M[1][0],x,y+40); 
+  text(truncate(M[1][0])+"",x,y+40); 
   fill(0,0,255);
-  text(M[2][0],x,y+60);
+  text(truncate(M[2][0])+"",x,y+60);
   fill(255);
 }
 
