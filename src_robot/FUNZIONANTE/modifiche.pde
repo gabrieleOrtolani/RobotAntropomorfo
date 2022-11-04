@@ -8,7 +8,8 @@ import com.jogamp.opengl.GLProfile;
 int strokeVar = 1;
 int strokeCol = #9D9654; //strokeCol = #6A4811;
 int gearCol = #A0A0A0;
-int ballCol = #00FF39;
+//int ballCol = #00FF39;
+int ballCol =#EA0CE0;
 int linkCol = #FFED24; //linkCol = #EA9A18; //linkCol = #F7B241;
 int floorCol = #858B77;
 
