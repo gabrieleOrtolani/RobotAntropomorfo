@@ -173,6 +173,7 @@ void scriviVettoreCol(String s, float[][] M, int x, int y) // Scrive una matrice
   text(M[1][0],x,y+40); 
   fill(0,0,255);
   text(M[2][0],x,y+60);
+  fill(255);
 }
 
 void scriviMatrice(String s, float[][] M, int x, int y) // Scrive una matrice a partire dal punto (x,y)
@@ -241,13 +242,16 @@ void scriviRe(String s, float[][] M, int x, int y) // Scrive una matrice a parti
 {
   
   textSize(20);
+  fill(255);
   text(s,x,y);
   fill(255,0,0);
   //prima colonna
   text(M[0][0],x,y); text(M[1][0],x,y+20); text(M[2][0],x,y+40);
   fill(0,255,0);
+  //seconda colonna
   text(M[0][1],x+90,y); text(M[1][1],x+90,y+20); text(M[2][1],x+90,y+40); 
   fill(0,0,255);
+  //terza colonna
   text(M[0][2],x+180,y); text(M[1][2],x+180,y+20); text(M[2][2],x+180,y+40);
   fill(255);
 }  
