@@ -151,12 +151,15 @@ float initB1 = 100;
 float initB2 = 500;
 
 boolean manualControl = false;
+float[] q = new float[6];  //stati degli angoli attuali
+float kp;
 
 
 
 void setup() {
   /* Create Window */
-  size(1500, 1000, P3D); //fullScreen(P3D);
+  //fullScreen(P3D);
+  size(1500, 800, P3D); //fullScreen(P3D);
   smooth(8);  // 8x anti-aliasing
 
   stroke(strokeCol);
@@ -170,6 +173,8 @@ void setup() {
   Ball[0] = initB0;
   Ball[1] = initB1;
   Ball[2] = initB2;
+  
+  kp = 0.4;
 }
 
 
@@ -185,7 +190,26 @@ void draw() {
    theta[i+3] = rad(90);
    }
    */
-
+ 
+  
+  if(segno==-1){
+    textSize(30);
+    fill(220,0,0);
+    text("-",10,20);
+    textSize(20);
+  }
+  if(segno==1){
+    textSize(30);
+    fill(0,220,0);
+    text("+",10,20);
+    textSize(20);
+  }  
+  
+      fill(255);
+      text(kp, 300,300);
+      
+      
+      
   Pe[0][0] = Ball[1];
   Pe[1][0] = Ball[0];
   Pe[2][0] = Ball[2];
@@ -217,7 +241,7 @@ void draw() {
    theta[4] = rad(-70);
    theta[5] = rad(90);
    */
-
+  move();
   drawRobot();
 }
 
@@ -278,6 +302,16 @@ void events() {
       angles[2] += segno*rad(5);
     }
     /* CONTROLLO ALPHA BETA E THETA */
+
+
+    /*LEGGE DI CONTROLLO DELLA VELOCITA*/
+    if ((key == 'K' || key == 'k')) {
+      kp += segno*.01;
+      if (kp<0.0) kp = 0;
+      if (kp>1.0) kp = 1.0;
+
+    }
+    /*LEGGE DI CONTROLLO DELLA VELOCITA*/
 
 
     /* GOMITO */
@@ -348,5 +382,18 @@ void events() {
       delay(200);
     }
     /* END SEGNO */
+  }
+}
+
+
+
+void move(){
+  for(int i = 0; i < 6; i++){
+    if(q[i]>theta[i]){
+      q[i]-= rad(kp*exp( abs(q[i]-theta[i])));
+    }
+    if(q[i]<theta[i]){
+      q[i]+= rad(kp*exp( abs(q[i]-theta[i])));
+    }
   }
 }
