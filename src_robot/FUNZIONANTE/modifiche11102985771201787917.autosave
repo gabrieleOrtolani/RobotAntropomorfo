@@ -14,7 +14,6 @@ int linkCol = #FFED24; //linkCol = #EA9A18; //linkCol = #F7B241;
 int floorCol = #858B77;
 
 
-
 /* Rotation angle Y-axis */
 float alpha  = 0;
 float beta = 0;
@@ -138,6 +137,7 @@ float d6 = c4r*2;                          //OK
 float theta[] = new float[6];
 float Pw[][] =  new float[3][1];    // matrice 3x1 non inizializzata
 float R36[][] = new float[3][3];
+float gomito = 1;
 float[] angles = new float[3];     // angles[0]=alpha....
 float Pe[][] = {{0}, {0}, {0}};
 float Re[][] = new float[3][3];
@@ -150,12 +150,10 @@ float initB0 = 1000;
 float initB1 = 100;
 float initB2 = 500;
 
-boolean angleGap= false;
 boolean manualControl = false;
 float[] q = new float[6];  //stati degli angoli attuali
 float kp;
-int gomito = 1;
-int axisId = 0;
+
 
 
 void setup() {
@@ -184,41 +182,22 @@ void setup() {
 void draw() {
   background(40);
   lights();
-
-  /*DEBUG*/
-  /*
-  for (int i = 0 ; i<3 ; i++) {
-   Pe[i][0] = -Ball[i];// serve per inseguire la pallina
-   theta[i+3] = rad(90);
-   }
-   */
- 
   
   if(segno==-1){
-    textSize(100);
+    textSize(30);
     fill(220,0,0);
-    textAlign(CENTER);
-    text("-",width/2,70);
+    text("-",10,20);
     textSize(20);
-    textAlign(LEFT);
   }
   if(segno==1){
-    textSize(100);
+    textSize(30);
     fill(0,220,0);
-    textAlign(CENTER);
-    text("+",width/2,70);
+    text("+",10,20);
     textSize(20);
-    textAlign(LEFT);
   }  
   
       fill(255);
-      text("K  =",20,100);
-      text("p",30,105);
-      text(kp, 50,100);
-      text("axisID: " + axisId, 60, 130);
-      
-
-  
+      text(kp, 300,300);
       
       
   Pe[0][0] = Ball[1];
@@ -230,11 +209,6 @@ void draw() {
 
   if (manualControl == false) {
     IK();  // Calcolo cinematica inversa
-    
-    int t = millis();                      //cinematica pallina
-    Ball[0] = 500*sin(rad(t/60*3.5));
-    Ball[1] = +500;//-1000*cos(rad(t/60*1.5));
-    //Ball[2] = 300+ 100*sin(rad(t/60*20));
   }
 
   events(); // Pressione tasti e mouse
@@ -323,8 +297,8 @@ void events() {
     /*LEGGE DI CONTROLLO DELLA VELOCITA*/
     if ((key == 'K' || key == 'k')) {
       kp += segno*.01;
-      if (kp<0.0) kp = 0.0;
-      if (kp>.6) kp = .6;
+      if (kp<0.0) kp = 0;
+      if (kp>1.0) kp = 1.0;
 
     }
     /*LEGGE DI CONTROLLO DELLA VELOCITA*/
@@ -332,20 +306,12 @@ void events() {
 
     /* GOMITO */
     if (key == '+') {
-      gomito = 1;
+      gomito *= gomito;
     }
     if (key == '-') {
-      gomito = -1;
+      gomito *= -gomito;
     }
     /* END GOMITO */
-    
-    
-    /* AXIS */
-    if (key == '9') {
-      axisId = (++axisId)%3;
-      delay(200);
-    }
-    /* END AXIS */
 
 
     /* MANUAL/AUTOMATIC */
@@ -412,21 +378,7 @@ void events() {
 
 
 void move(){
-  /*
-  possiamo estendere il controllo intelligente degli angoli
-  a piu angoli facendo un vettore di angleGAP[]    
-  */
-  angleGap = false;
-  if (abs(theta[0]-q[0])>rad(180)){
-    angleGap = true;
-  }
-  
-  if (angleGap == true){
-    q[0]=theta[0]+rad(360);
-  }else{
-    q[0]=theta[0];
-  }
-  for(int i = 1; i < 6; i++){
+  for(int i = 0; i < 6; i++){
     if(q[i]>theta[i]){
       q[i]-= rad(kp*exp( abs(q[i]-theta[i])));
     }

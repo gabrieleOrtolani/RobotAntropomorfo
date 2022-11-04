@@ -26,7 +26,7 @@ void drawRobot(){
   /* DRAW AXYS L0 */
   pushMatrix();
   translate(0, 0, -c0h/2-a0z); // mi sposto per disegnare gli assi
-  drawAxis(1000);
+  drawAxis(1000,1);
   popMatrix();
 
 
@@ -62,7 +62,7 @@ void drawRobot(){
   /* DRAW AXYS L1 */
   pushMatrix();
   rotateZ(rad(180));
-  drawAxis(500);
+  drawAxis(500,0);
   popMatrix();
   
 
@@ -93,7 +93,7 @@ void drawRobot(){
   /* DRAW AXYS L2 */
   pushMatrix();
   rotateZ(rad(90));
-  drawAxis(500);
+  drawAxis(500,0);
   popMatrix();
 
   
@@ -102,7 +102,7 @@ void drawRobot(){
   rotateZ(-q[2]+rad(90));  // -----------> Rotazione 3
   pushMatrix();
   rotateY(rad(-90));
-  drawAxis(500);
+  drawAxis(500,0);
   popMatrix();
 
 
@@ -183,7 +183,7 @@ void drawRobot(){
   pushMatrix();
   rotateX(rad(-90));
   rotateZ(rad(-90));
-  drawAxis(500);
+  drawAxis(500,0);
   popMatrix();
 
   
@@ -192,7 +192,7 @@ void drawRobot(){
   pushMatrix();
   rotateX(rad(180));
   rotateZ(rad(-90));
-  drawAxis(500);
+  drawAxis(500,0);
   popMatrix();  
   
   
@@ -208,14 +208,20 @@ void drawRobot(){
   pushMatrix();
   rotateX(rad(180));
   rotateZ(rad(-90));
-  drawAxis(500);
+  drawAxis(500,1);
   popMatrix();
 }
 
 
 
-void drawAxis(float lineLenght) {
+void drawAxis(float lineLenght, int id) {
+  boolean opacity = true;
+  
   strokeWeight(4); //ricorda-->4
+  if ((axisId==1 && id==0) || (axisId==2 && (id==1 || id ==0))) {
+    strokeWeight(0); //ricorda-->4
+    opacity = false;
+  }
   
   stroke(0, 255, 0);
   fill(0, 255, 0);
@@ -224,7 +230,7 @@ void drawAxis(float lineLenght) {
   line(0, 0, 0, lineLenght, 0, 0); // y = green
   translate(lineLenght, 0, 0);
   rotateY(rad(90));
-  drawCylinder(30, 15, 0, 30);
+  if(opacity) drawCylinder(30, 15, 0, 30);
   popMatrix();
   
   stroke(255, 0, 0);
@@ -234,7 +240,7 @@ void drawAxis(float lineLenght) {
   line(0, 0, 0, 0, lineLenght, 0); // x = red
   translate(0, lineLenght, 0);
   rotateX(rad(-90));
-  drawCylinder(30, 15, 0, 30);
+  if(opacity) drawCylinder(30, 15, 0, 30);
   popMatrix();
   
   stroke(0, 0, 255);
@@ -243,7 +249,7 @@ void drawAxis(float lineLenght) {
   pushMatrix();
   line(0, 0, 0, 0, 0, lineLenght); // z = blue
   translate(0, 0, lineLenght);
-  drawCylinder(30, 15, 0, 30);
+  if(opacity) drawCylinder(30, 15, 0, 30);
   popMatrix();
   
   strokeWeight(strokeVar);

@@ -21,6 +21,13 @@ void IK(){
   scriviVettoreCol("", Pw, 60, 15);
   
   // calcolo di theta1
+  float d = abs(theta[0] - atan2(Pw[1][0], Pw[0][0]));
+  /*
+  if (d > PI){
+    theta[0] = abs(rad(360) + atan2(Pw[1][0], Pw[0][0]));
+  }else{
+    theta[0] = atan2(Pw[1][0], Pw[0][0]);
+  }*/
   theta[0] = atan2(Pw[1][0], Pw[0][0]);
   textSize(20);
   fill(255);
@@ -29,18 +36,19 @@ void IK(){
   
   A1 = Pw[0][0]*cos(theta[0]) + Pw[1][0]*sin(theta[0]) - l1;
   A2 = d1 - Pw[2][0];
-  /* stampa di debug
-  text("A1, A2:", 100, 600);
-  text(A1, 100, 630);
-  text(A2, 100, 660);
-  */
+
   // calcolo di theta3
-  theta[2] =gomito*calcoloTheta3(A1, A2);
+  theta[2] = calcoloTheta3(A1, A2);
+  
+  if (gomito==-1){
+    theta[2] = PI-theta[2]; 
+  }
+  
   text("Theta[2]:", 30, 240);
   text(truncate(theta[2]*180/PI)+"°", 110, 240);
   
   // calcolo di theta2
-  theta[1] = gomito*atan2(d4*cos(theta[2])*A1 - (d4*sin(theta[2])+l2)*A2, (d4*sin(theta[2])+l2)*A1 + d4*cos(theta[2])*A2);
+  theta[1] = atan2(d4*cos(theta[2])*A1 - (d4*sin(theta[2])+l2)*A2, (d4*sin(theta[2])+l2)*A1 + d4*cos(theta[2])*A2);
   text("Theta[1]:", 30, 220);
   text(truncate(theta[1]*180/PI)+"°", 110, 220); 
   
@@ -77,7 +85,7 @@ void calcoloAtan2(){
   
 
   if(theta[4] == 0){
-    theta[5] = deg(80);
+    theta[5] = rad(0);
     theta[3] = atan2(R36[1][0], R36[0][0]) - theta[5];
     
     text("Theta[3]:", 30, 260);
@@ -86,7 +94,7 @@ void calcoloAtan2(){
     text(truncate(theta[5]*180/PI)+"°", 110, 300);
   }
   else if(theta[4] == 180){
-    theta[5] = deg(70);
+    theta[5] = rad(0);
     theta[3] = atan2(-R36[1][0], -R36[0][0]) + theta[5];
     
     text("Theta[3]:", 30, 260);
@@ -126,7 +134,15 @@ float calcoloTheta3(float A1, float A2){
   
   arg = pow(A1, 2) + pow(A2, 2) - pow(d4, 2) - pow(l2, 2);
   arg /= (2*l2*d4);
-  
+  if(arg>=1 || arg<=-1){
+    textSize(50);
+    fill(255,0,0);
+    textAlign(CENTER);
+    text("Fuori portata",width/2,150);
+    textSize(20);
+    textAlign(LEFT);
+    return theta[2]; // angolo base
+  }
 
   return asin(arg);
 }
