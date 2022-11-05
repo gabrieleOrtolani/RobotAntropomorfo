@@ -56,21 +56,6 @@ void IK(){
         {sin(theta[0])*cos(theta[1]+theta[2]), -cos(theta[0]), sin(theta[0])*sin(theta[1]+theta[2])},
         {sin(theta[1]+theta[2]), 0, -cos(theta[1]+theta[2])}}; //ROTAZIONE POLSO-BASE
   //scriviMatrice("R_03", R03, 200, 500);    //stampa di debug
-  //R36 = mProd(trasposta(R03), Re);
-  /*
-  R36[0][0] = cos(theta[3])*cos(theta[4])*cos(theta[5])- sin(theta[3])*sin(theta[5]);
-  R36[0][1] = -cos(theta[3])*cos(theta[4])*cos(theta[5])- sin(theta[3])*sin(theta[5]);
-  R36[0][2] = cos(theta[3])*sin(theta[4]);
-  
-  R36[1][0] = sin(theta[3])*cos(theta[4])*cos(theta[5])- cos(theta[3])*sin(theta[5]);
-  R36[1][1] = -sin(theta[3])*cos(theta[4])*cos(theta[5])+ cos(theta[3])*sin(theta[5]);
-  R36[1][2] = sin(theta[3])*sin(theta[4]);
-  
-  R36[2][0] = -sin(theta[4])*cos(theta[5]);
-  R36[2][1] = sin(theta[4])*sin(theta[5]);
-  R36[2][2] = cos(theta[5]);
-  scriviMatrice("R_36", R36, 200, 650);
-  */
   R36 = mProd(trasposta(R03), Re);
   //scriviMatrice("R_36", R36, 800, 650);    //stampa di debug
   calcoloAtan2();
