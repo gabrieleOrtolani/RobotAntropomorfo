@@ -177,9 +177,17 @@ void setup() {
   Ball[1] = initB1;
   Ball[2] = initB2;
   
+  
+   q[0] = 0;
+   q[1] = rad(90);
+   q[2] = rad(-90);
+   q[3] = 0;
+   q[4] = rad(180);
+   q[5] = 0;
+  
   control_move = true;
   
-  kp = 0.4;
+  kp = 0.15;
 }
 
 
@@ -244,15 +252,7 @@ void draw() {
   rotateZ(alpha);
   rotateX(beta);
   box(xFloor, yFloor, zFloor);
-
-  /*
-  theta[0] = rad(80);
-   theta[1] = rad(30);
-   theta[2] = rad(110);
-   theta[3] = rad(-90);
-   theta[4] = rad(-70);
-   theta[5] = rad(90);
-   */
+  
   move();
   drawRobot();
 }
@@ -289,6 +289,7 @@ void events() {
     }
     if(key == 'c' || key == 'C') {
       control_move = !control_move;
+      delay(200);
     }
     /* END ENV CONTROL*/
 
@@ -439,12 +440,25 @@ void move(){
   }
   /*TESTING*/
   
-  for(int i = 1; i < 6; i++){
-    if(q[i]>theta[i]){
-      q[i]-= rad(kp*exp( abs(q[i]-theta[i])));
+  
+  if (kp ==1){
+    for(int i = 1; i < 6; i++){
+      if(q[i]>theta[i]){
+        q[i]= theta[i];
+      }
+      if(q[i]<theta[i]){
+        q[i]= theta[i];
+      }
     }
-    if(q[i]<theta[i]){
-      q[i]+= rad(kp*exp( abs(q[i]-theta[i])));
+  }
+  else {
+    for(int i = 1; i < 6; i++){
+      if(q[i]>theta[i]){
+        q[i]-= rad(kp*exp( abs(q[i]-theta[i])));
+      }
+      if(q[i]<theta[i]){
+        q[i]+= rad(kp*exp( abs(q[i]-theta[i])));
+      }
     }
   }
 }
