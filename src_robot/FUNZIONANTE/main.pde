@@ -196,7 +196,6 @@ void draw() {
   background(40);
   lights();
 
-  
   if(segno==-1){
     textSize(100);
     fill(220,0,0);
@@ -212,7 +211,29 @@ void draw() {
     text("+",width/2,70);
     textSize(20);
     textAlign(LEFT);
-  }  
+  }
+  
+  if(gomito==-1){
+    fill(255);
+    text("Gomito: ", width/2-100, 92);
+    textSize(100);
+    fill(220,0,0);
+    textAlign(CENTER);
+    text("-",width/2,120);
+    textSize(20);
+    textAlign(LEFT);
+  }
+  if(gomito==1){
+    fill(255);
+    text("Gomito: ", width/2-100, 92);
+    textSize(100);
+    fill(0,220,0);
+    textAlign(CENTER);
+    text("+",width/2,120);
+    textSize(20);
+    textAlign(LEFT);
+  }
+  
   
   fill(255);
   text("K  =",20,100);
