@@ -1,4 +1,3 @@
-
 void IK(){
   float vetCol[][] = new float[3][1];
   float A1 = 0, A2 = 0;

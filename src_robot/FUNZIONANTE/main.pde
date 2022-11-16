@@ -1,3 +1,26 @@
+/*
+  Componenti del gruppo: Andrea Andreoli, Gabriele Ortolani, Gabriele Iacovacci, Simone Arcari;
+  
+  Manuale d'uso:
+    - FRECCIA SU = avvicinarsi al robot 
+    - FRECCIA GIU = allontanarsi dal robot
+    - FRECCIA SINISTRA = ruotare l'ambiente verso sinistra
+    - FRECCIA DESTRA = ruotare l'ambiente verso destra
+    - 0 = ruotare l'ambiente verso l'alto
+    - s = cambiare segno (segno è la variabile che fa crescere o decrescere il Kp)
+    - q = per ripristinare il robot e l'interfaccia alla posizione iniziale
+    - x/X = varia la x desiderata in base al segno scelto
+    - y/Y = varia la y desiderata in base al segno scelto
+    - z/Z = varia la z desiderata in base al segno scelto
+    - + = imposta gomito alto
+    - - = imposta gomito basso
+    - a/A = variazione dell'angolo alpha
+    - b/B = variazione dell'angolo beta
+    - t/T = variazione dell'angolo theta
+    - m = modalità cinematica diretta
+    - c/C = modalità automatica (inseguimento moto pallina)
+*/
+
 import com.jogamp.opengl.GLProfile;
 {
   GLProfile.initSingleton();
@@ -259,9 +282,30 @@ void draw() {
       Ball[1] = -1200*sin(rad(t/60*3.5));
       //Ball[2] = 300+ 100*sin(rad(t/60*20));
     }
-
   }
-
+  
+  if (manualControl == true) {
+    fill(255);
+    
+    text("Theta[0]:", 30, 200);
+    text(truncate(theta[0]*180/PI)+"°",110, 200); 
+    
+    text("Theta[1]:", 30, 220);
+    text(truncate(theta[1]*180/PI)+"°", 110, 220); 
+    
+    text("Theta[2]:", 30, 240);
+    text(truncate(theta[2]*180/PI)+"°", 110, 240);
+    
+    text("Theta[3]:", 30, 260);
+    text(truncate(theta[3]*180/PI)+"°", 110, 260);
+    
+    text("Theta[4]:", 30, 280);
+    text(truncate(theta[4]*180/PI)+"°", 110, 280);
+    
+    text("Theta[5]:", 30, 300);
+    text(truncate(theta[5]*180/PI)+"°", 110, 300);
+  }
+  
   events(); // Pressione tasti e mouse
 
   /* SETTING ENV */
@@ -335,7 +379,7 @@ void events() {
     if (key == 'b' || key == 'B') {
       angles[1] += segno*rad(5);
     }
-    if (key == 'o' || key == 'O') {
+    if (key == 't' || key == 'T') {
       angles[2] += segno*rad(5);
     }
     /* CONTROLLO ALPHA BETA E THETA */
@@ -429,7 +473,6 @@ void events() {
     /* END SEGNO */
   }
 }
-
 
 
 void move(){
