@@ -125,7 +125,7 @@ void drawRobot(){
 
   /* Gear motore1 */
   pushMatrix();
-  translate(a3x-sqrt(2)*g3s/2-sqrt(2)*g3s2/2, 0, -(-g3h/2+a3z/2)); //lasciare cosi 34/42
+  translate(a3x-sqrt(2)*g3s/2-sqrt(2)*g3s2/2, 0, -(-g3h/2+a3z/2)); 
   drawCylinder(90, c3r2, c3r2, c3h2);
   rotateZ(q[2]*0.8);
   drawGear(g3s2, g3h2, 24);
@@ -217,9 +217,9 @@ void drawRobot(){
 void drawAxis(float lineLenght, int id) {
   boolean opacity = true;
   
-  strokeWeight(4); //ricorda-->4
+  strokeWeight(4); 
   if ((axisId==1 && id==0) || (axisId==2 && (id==1 || id ==0))) {
-    strokeWeight(0); //ricorda-->4
+    strokeWeight(0); 
     opacity = false;
   }
   
@@ -227,7 +227,7 @@ void drawAxis(float lineLenght, int id) {
   fill(0, 255, 0);
   
   pushMatrix();
-  line(0, 0, 0, lineLenght, 0, 0); // y = green
+  line(0, 0, 0, lineLenght, 0, 0); 
   translate(lineLenght, 0, 0);
   rotateY(rad(90));
   if(opacity) drawCylinder(30, 15, 0, 30);
@@ -268,8 +268,7 @@ void drawGear(float side, float h, int nGear) {
     rotateZ(rad(angle));
   }
   fill(linkCol);
-  //stroke(255);
-  //strokeWeight(strokeVar);
+
 }
 
 

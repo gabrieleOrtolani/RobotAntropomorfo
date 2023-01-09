@@ -12,7 +12,6 @@ void IK(){
   scriviRe("", Re, 1200, 30);
   
   vetCol = CalcoloPw(Re, d6);
-  //scriviVettoreCol("d6*a_e:", vetCol, 100, 200);  //stampa di debug
   
   Pw = mSum(Pe, vetCol);
   text("P    =",20,50);
@@ -21,17 +20,11 @@ void IK(){
   
   // calcolo di theta1
   float d = abs(theta[0] - atan2(Pw[1][0], Pw[0][0]));
-  /*
-  if (d > PI){
-    theta[0] = abs(rad(360) + atan2(Pw[1][0], Pw[0][0]));
-  }else{
-    theta[0] = atan2(Pw[1][0], Pw[0][0]);
-  }*/
   theta[0] = atan2(Pw[1][0], Pw[0][0]);
   textSize(20);
   fill(255);
   text("Theta[0]:", 30, 200);
-  text(truncate(theta[0]*180/PI)+"°",110, 200);    // modificato
+  text(truncate(theta[0]*180/PI)+"°",110, 200); 
   
   A1 = Pw[0][0]*cos(theta[0]) + Pw[1][0]*sin(theta[0]) - l1;
   A2 = d1 - Pw[2][0];

@@ -184,8 +184,7 @@ int axisId = 0;
 
 void setup() {
   /* Create Window */
-  //fullScreen(P3D);
-  size(1500, 800, P3D); //fullScreen(P3D);
+  size(1500, 800, P3D);
   smooth(8);  // 8x anti-aliasing
 
   stroke(strokeCol);
@@ -476,10 +475,7 @@ void events() {
 
 
 void move(){
-  /*
-  possiamo estendere il controllo intelligente degli angoli
-  a piu angoli facendo un vettore di angleGAP[]    
-  */
+
   angleGap[0] = false;
   if (abs(theta[0]-q[0])>rad(180)){
     angleGap[0] = true;
