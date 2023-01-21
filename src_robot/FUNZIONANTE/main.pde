@@ -478,6 +478,7 @@ void events() {
 }
 
 
+
 void move(){
 
   angleGap[0] = false;
@@ -502,7 +503,6 @@ void move(){
   }else{
     q[0]=theta[0];
   }
-  /*TESTING*/
   
   
   if (kp ==1){

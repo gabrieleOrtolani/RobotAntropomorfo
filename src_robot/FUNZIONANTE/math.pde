@@ -100,12 +100,17 @@ void calcoloAtan2(){
  
 }
 
+
+
 float[][] Rz_calc(float angle){
   float[][] my_Rz = {{cos(angle),-sin(angle),0},
                      {sin(angle),cos(angle),0},
                      {0,0,1}};
   return my_Rz;                   
 }
+
+
+
 float[][] Ry_calc(float angle){
   float[][] my_Ry = {{cos(PI/2-angle),0,sin(PI/2-angle)},
                      {0,1,0},
@@ -133,6 +138,8 @@ float calcoloTheta3(float A1, float A2){
   return asin(arg);
 }
 
+
+
 float[][] mProd(float[][] A,float[][] B) // Calcola prodotto di due matrici A e B
 {
   int nA = A.length;
@@ -153,6 +160,9 @@ float[][] mProd(float[][] A,float[][] B) // Calcola prodotto di due matrici A e 
   }
   return C;
 }
+
+
+
 float[][] CalcoloPw(float[][] Re, float d6){
   float res[][] = new float[3][1];
   
@@ -163,6 +173,8 @@ float[][] CalcoloPw(float[][] Re, float d6){
     
   return res;
 }
+
+
 
 void scriviVettoreCol(String s, float[][] M, int x, int y) // Scrive una matrice a partire dal punto (x,y)
 {
@@ -178,6 +190,8 @@ void scriviVettoreCol(String s, float[][] M, int x, int y) // Scrive una matrice
   fill(255);
 }
 
+
+
 void scriviMatrice(String s, float[][] M, int x, int y) // Scrive una matrice a partire dal punto (x,y)
 {
   
@@ -191,6 +205,8 @@ void scriviMatrice(String s, float[][] M, int x, int y) // Scrive una matrice a 
 
   text(M[2][0],x,y+90); text(M[2][1],x+90,y+90); text(M[2][2],x+180,y+90);
 }  
+
+
 
 float[][] mSum(float[][] A,float[][] B) // Calcola la somma di due matrici A e B
 {
@@ -208,6 +224,8 @@ float[][] mSum(float[][] A,float[][] B) // Calcola la somma di due matrici A e B
   }
   return C;
 }
+
+
 
 float[][] trasposta(float[][] A) // Calcola la trasposta di una matrice A
 {
@@ -231,10 +249,13 @@ float rad(float degree) {
   return degree * PI/180.0;
 }
 
+
+
 /* Convertitore da radianti a gradi */
 float deg(float radians) {
   return radians * 180.0/PI;
 }
+
 
 
 float truncate(float x){
