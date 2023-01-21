@@ -19,6 +19,13 @@
     - t/T = variazione dell'angolo theta
     - m = modalità cinematica diretta (per DEBUG)
     - c/C = modalità automatica (inseguimento moto pallina)
+    - 1 = varia theta1 (modalità cinematica diretta)
+    - 2 = varia theta2 (modalità cinematica diretta)
+    - 3 = varia theta3 (modalità cinematica diretta)
+    - 4 = varia theta4 (modalità cinematica diretta)
+    - 5 = varia theta5 (modalità cinematica diretta)
+    - 6 = varia theta6 (modalità cinematica diretta)
+    - 9 = cambia visibiltà assi cartesiani
 */
 // per macOS
 import com.jogamp.opengl.GLProfile;
@@ -384,7 +391,7 @@ void events() {
     /*LEGGE DI CONTROLLO DELLA VELOCITA*/
     if ((key == 'K' || key == 'k')) {
       kp += segno*.01;
-      if (kp<0.0) kp = 0.0;
+      if (kp<0.1) kp = 0.1;
       if (kp>1.0) kp = 1.0;
 
     }
