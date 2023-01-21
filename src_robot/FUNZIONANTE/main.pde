@@ -7,7 +7,7 @@
     - FRECCIA SINISTRA = ruotare l'ambiente verso sinistra
     - FRECCIA DESTRA = ruotare l'ambiente verso destra
     - 0 = ruotare l'ambiente verso l'alto
-    - s = cambiare segno (segno è la variabile che fa crescere o decrescere il Kp)
+    - s = cambia segno per tutte le vabiabili (x/X, y/Y, z/Z ,k/K etc...)
     - q = per ripristinare il robot e l'interfaccia alla posizione iniziale
     - x/X = varia la x desiderata in base al segno scelto
     - y/Y = varia la y desiderata in base al segno scelto
@@ -17,10 +17,10 @@
     - a/A = variazione dell'angolo alpha
     - b/B = variazione dell'angolo beta
     - t/T = variazione dell'angolo theta
-    - m = modalità cinematica diretta
+    - m = modalità cinematica diretta (per DEBUG)
     - c/C = modalità automatica (inseguimento moto pallina)
 */
-
+// per macOS
 import com.jogamp.opengl.GLProfile;
 {
   GLProfile.initSingleton();
@@ -29,11 +29,10 @@ import com.jogamp.opengl.GLProfile;
 
 /* General variables for stroke/color */
 int strokeVar = 1;
-int strokeCol = #9D9654; //strokeCol = #6A4811;
+int strokeCol = #9D9654;
 int gearCol = #A0A0A0;
-//int ballCol = #00FF39;
 int ballCol =#EA0CE0;
-int linkCol = #FFED24; //linkCol = #EA9A18; //linkCol = #F7B241;
+int linkCol = #FFED24; 
 int floorCol = #858B77;
 
 
@@ -209,7 +208,7 @@ void setup() {
   
   control_move = true;
   
-  kp = 0.15;
+  kp = 1;
 }
 
 
@@ -261,16 +260,14 @@ void draw() {
   text("K  =",20,100);
   text("p",30,105);
   text(kp, 50,100);
-  text("axisID: " + axisId, 60, 130);
-      
-
   
+    
+
   Pe[0][0] = Ball[1];
   Pe[1][0] = Ball[0];
   Pe[2][0] = Ball[2];
-  /* PRINTING */
-  //textSize(20);
-  /* END PRINTING */
+  
+ 
 
   if (manualControl == false) {
     IK();  // Calcolo cinematica inversa
@@ -279,7 +276,7 @@ void draw() {
       int t = millis();                      //cinematica pallina
       Ball[0] = 1200*cos(rad(t/60*3.5));
       Ball[1] = -1200*sin(rad(t/60*3.5));
-      //Ball[2] = 300+ 100*sin(rad(t/60*20));
+ 
     }
   }
   
@@ -360,10 +357,10 @@ void events() {
 
     /* POSIZIONE DESIDERATA */
     if (key == 'x' || key == 'X') {
-      Ball[0] += segno*10;
+      Ball[1] += segno*10;
     }
     if (key == 'y' || key == 'Y') {
-      Ball[1] += segno*10;
+      Ball[0] += segno*10;
     }
     if (key == 'z' || key == 'Z') {
       Ball[2] += segno*10;

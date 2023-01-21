@@ -1,7 +1,7 @@
 void IK(){
   float vetCol[][] = new float[3][1];
   float A1 = 0, A2 = 0;
-  Rz_alfa = Rz_calc(angles[0]);    // ----->ricontrollare 
+  Rz_alfa = Rz_calc(angles[0]);    
   Rz_theta = Rz_calc(angles[2]);
   Ry = Ry_calc(angles[1]);
   Re = mProd(Rz_alfa,Ry);
@@ -12,11 +12,20 @@ void IK(){
   scriviRe("", Re, 1200, 30);
   
   vetCol = CalcoloPw(Re, d6);
-  
+  text("α=",150,25);
+  text(angles[0],170,25);
+  text("β=",150,45);
+  text(angles[1],170,45);
+  text("θ=",150,65);
+  text(angles[2],170,65);
   Pw = mSum(Pe, vetCol);
   text("P    =",20,50);
-  text("w",30,55);
-  scriviVettoreCol("", Pw, 60, 15);
+  text("e",30,55);
+  
+  text(Pe[0][0],60,25);
+  text(Pe[1][0],60,45);
+  text(Pe[2][0],60,65);
+  
   
   // calcolo di theta1
   float d = abs(theta[0] - atan2(Pw[1][0], Pw[0][0]));
